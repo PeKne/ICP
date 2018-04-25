@@ -18,9 +18,14 @@ private slots:
     void save_file();
     void load_file();
     void add_block();
+    void run_app();
+    void stop_app();
+    void debug_app();
 
 private:
-    QMenu *fileMenu;
+    QMenu *menu1;
+    QMenu *menu2;
+    QMenu *menu3;
     QGraphicsView *view;
     Editor *nodes;
     QGraphicsScene *scene;

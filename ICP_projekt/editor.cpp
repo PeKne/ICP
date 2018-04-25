@@ -6,36 +6,54 @@
 
 
 EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent){
-    scene = new QGraphicsScene();
 
-    // Vytvoreni akci
+    // Vytvoreni akci pro menu
     QAction *QA_add = new QAction(tr("&Add"), this);
     QA_add->setStatusTip(tr("Add new block"));
-    connect(QA_add, SIGNAL(triggered()), this, SLOT(addBlock()));
+    connect(QA_add, SIGNAL(triggered()), this, SLOT(add_block()));
 
     QAction *QA_load = new QAction(tr("&Load"), this);
     QA_load->setShortcuts(QKeySequence::Open);
     QA_load->setStatusTip(tr("Open file"));
-    connect(QA_load, SIGNAL(triggered()), this, SLOT(loadFile()));
+    connect(QA_load, SIGNAL(triggered()), this, SLOT(load_file()));
 
     QAction *QA_save = new QAction(tr("&Save"), this);
     QA_save->setShortcuts(QKeySequence::Save);
     QA_save->setStatusTip(tr("Save file"));
-    connect(QA_save, SIGNAL(triggered()), this, SLOT(saveFile()));
+    connect(QA_save, SIGNAL(triggered()), this, SLOT(save_file()));
 
     QAction *QA_quit = new QAction(tr("&Quit"), this);
     QA_quit->setShortcuts(QKeySequence::Quit);
     QA_quit->setStatusTip(tr("Quit the app"));
     connect(QA_quit, SIGNAL(triggered()), qApp, SLOT(quit()));
 
-    // Pridani do menu gui
-    fileMenu = menuBar()->addMenu(tr("&File"));
+    QAction *QA_run = new QAction(tr("&Run"), this);
+    QA_add->setStatusTip(tr("Run"));
+    connect(QA_run, SIGNAL(triggered()), this, SLOT(run_app()));
 
-    fileMenu->addAction(QA_add);
-    fileMenu->addAction(QA_save);
-    fileMenu->addAction(QA_load);
-    fileMenu->addSeparator();
-    fileMenu->addAction(QA_quit);
+    QAction *QA_stop = new QAction(tr("&Stop"), this);
+    QA_add->setStatusTip(tr("Stop"));
+    connect(QA_stop, SIGNAL(triggered()), this, SLOT(stop_app()));
+
+    QAction *QA_debug = new QAction(tr("&Debug"), this);
+    QA_add->setStatusTip(tr("Debug"));
+    connect(QA_debug, SIGNAL(triggered()), this, SLOT(debug_app()));
+
+    // Nastaveni menu
+    menu1 = menuBar()->addMenu(tr("&Schema"));
+    menu2 = menuBar()->addMenu(tr("&Block"));
+    menu3 = menuBar()->addMenu(tr("&Action"));
+
+    menu1->addAction(QA_save);
+    menu1->addAction(QA_load);
+    menu1->addSeparator();
+    menu1->addAction(QA_quit);
+    menu2->addAction(QA_add);
+    menu3->addAction(QA_run);
+    menu3->addAction(QA_stop);
+    menu3->addAction(QA_debug);
+
+    scene = new QGraphicsScene(this);
 
     // Nastaveni title mainwindow
     setWindowTitle(tr("Schema Editor v1"));
@@ -44,7 +62,7 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent){
     QDockWidget *schema = new QDockWidget(tr("Schema"), this);
     schema->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 
-    view = new QGraphicsView(schema);
+    view = new QGraphicsView(this);
     view->setScene(scene);
     view->setRenderHint(QPainter::Antialiasing, true);
     schema->setWidget(view);
@@ -113,4 +131,13 @@ void EditorMainWindow::add_block(){
         block->set_position(view->sceneRect().center().toPoint());
     }
     */
+}
+void EditorMainWindow::run_app(){
+
+}
+void EditorMainWindow::stop_app(){
+
+}
+void EditorMainWindow::debug_app(){
+
 }
