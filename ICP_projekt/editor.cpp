@@ -62,11 +62,11 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) : QMainWindow(parent){
     QDockWidget *schema = new QDockWidget(tr("Schema"), this);
     schema->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
 
-    view = new QGraphicsView(this);
+    view = new QGraphicsView(schema);
     view->setScene(scene);
     view->setRenderHint(QPainter::Antialiasing, true);
     schema->setWidget(view);
-    addDockWidget(Qt::LeftDockWidgetArea, schema);
+    //addDockWidget(Qt::LeftDockWidgetArea, schema);
 
     //nodesEditor = new QNodesEditor(this);
     //nodesEditor->install(scene);
