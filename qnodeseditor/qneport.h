@@ -63,7 +63,7 @@ public:
 protected:
 	QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
-private:
+public:
 	QNEBlock *m_block;
 	QString name;
 	bool isOutput_;

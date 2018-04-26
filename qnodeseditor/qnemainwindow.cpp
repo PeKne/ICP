@@ -55,9 +55,9 @@ QNEMainWindow::QNEMainWindow(QWidget *parent) :
     QA_add->setStatusTip(tr("Add new block/"));
     connect(QA_div, SIGNAL(triggered()), this, SLOT(add_block_div()));
 
-    QAction *QA_muv = new QAction(tr("&Add Block*"), this);
+    QAction *QA_mul = new QAction(tr("&Add Block*"), this);
     QA_add->setStatusTip(tr("Add new block*"));
-    connect(QA_muv, SIGNAL(triggered()), this, SLOT(add_block_muv()));
+    connect(QA_mul, SIGNAL(triggered()), this, SLOT(add_block_mul()));
 
     QAction *QA_output = new QAction(tr("&Add Block Output*"), this);
     QA_add->setStatusTip(tr("Add new block*"));
@@ -107,7 +107,7 @@ QNEMainWindow::QNEMainWindow(QWidget *parent) :
     menu2->addAction(QA_add);
     menu2->addAction(QA_sub);
     menu2->addAction(QA_div);
-    menu2->addAction(QA_muv);
+    menu2->addAction(QA_mul);
     menu2->addAction(QA_input);
     menu2->addAction(QA_output);
 /*
@@ -118,11 +118,9 @@ QNEMainWindow::QNEMainWindow(QWidget *parent) :
 
 
 
-    setWindowTitle(tr("Node Editor"));
+    setWindowTitle(tr("Schema editor v1"));
 
-
-
-    QDockWidget *dock = new QDockWidget(tr("Nodes"), this);
+    QDockWidget *dock = new QDockWidget(tr("Actual schema"), this);
     dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     view = new QGraphicsView(dock);
     view->setScene(scene);
@@ -226,7 +224,7 @@ void QNEMainWindow::add_block_div()
     b->addPort("Out", 1, 0, 0);
     b->setPos(view->sceneRect().center().toPoint());
 }
-void QNEMainWindow::add_block_muv()
+void QNEMainWindow::add_block_mul()
 {
     QNEBlock *b = new QNEBlock(0);
 
@@ -236,6 +234,13 @@ void QNEMainWindow::add_block_muv()
     b->addPort("In", 0, 0, 0);
     b->addPort("In", 0, 0, 0);
     b->addPort("Out", 1, 0, 0);
+    //QLineEdit* text1 = new QLineEdit("Some Text");
+    QGraphicsSimpleTextItem *text1 = new QGraphicsSimpleTextItem;
+    text1->setPos(-200, -150);
+
+    text1->setText("This is an arbitrary English sentence");
+
+    scene->addItem(text1);
     b->setPos(view->sceneRect().center().toPoint());
 }
 void QNEMainWindow::add_block_input()

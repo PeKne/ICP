@@ -52,7 +52,7 @@ public:
 
 	int type() const { return Type; }
 
-private:
+public:
 	QPointF pos1;
 	QPointF pos2;
 	QNEPort *m_port1;

@@ -29,7 +29,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 #include <QGraphicsScene>
 #include <QFontMetrics>
 #include <QPainter>
-
+#include "qneconnection.h"
 #include "qneport.h"
 
 QNEBlock::QNEBlock(QGraphicsItem *parent) : QGraphicsPathItem(parent)
@@ -211,10 +211,32 @@ QVariant QNEBlock::itemChange(GraphicsItemChange change, const QVariant &value)
 	return value;
 }
 void QNEBlock::fetch_inputs(){
-
+    QVector<QNEPort*> arrayports = this->ports();
+    bool first = false;
+    foreach(QNEPort *thisport, arrayports){
+        if(!(thisport->isOutput())){
+            if(first == false){
+                first = true;
+                if(thisport->m_connections[0]->m_port1->m_block->def == true){
+                    this->input1 = thisport->m_connections[0]->m_port1->m_block->value;
+                }else{
+                    break;
+                }
+            }else{
+                if(thisport->m_connections[0]->m_port1->m_block->def == true){
+                    this->input2 = thisport->m_connections[0]->m_port1->m_block->value;
+                }
+                break;
+            }
+        }
+    }
 }
 void QNEBlock::calculate(){
     //metoda hleda vstupy
+    if(this->oper == 'K'){
+        this->input1 = 42;
+    }
+    this->fetch_inputs();
     switch(this->oper){
         case '+':
             this->value = this->input1 + this->input2;

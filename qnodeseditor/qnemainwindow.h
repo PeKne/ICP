@@ -51,7 +51,7 @@ private slots:
     void add_block_add();
     void add_block_sub();
     void add_block_div();
-    void add_block_muv();
+    void add_block_mul();
     void add_block_input();
     void add_block_output();
 
