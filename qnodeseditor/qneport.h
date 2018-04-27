@@ -68,6 +68,7 @@ public:
 	QString name;
 	bool isOutput_;
 	QGraphicsTextItem *label;
+    bool typed = false;
 	int radius_;
 	int margin;
 	QVector<QNEConnection*> m_connections;

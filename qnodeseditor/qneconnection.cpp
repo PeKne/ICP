@@ -33,6 +33,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 QNEConnection::QNEConnection(QGraphicsItem *parent) : QGraphicsPathItem(parent)
 {
+    static std::vector<class QNEBlock*> instances;
 	setPen(QPen(Qt::black, 2));
 	setBrush(Qt::NoBrush);
 	setZValue(-1);

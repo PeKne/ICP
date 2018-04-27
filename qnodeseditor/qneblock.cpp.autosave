@@ -215,7 +215,12 @@ void QNEBlock::fetch_inputs(){
     QVector<QNEPort*> arrayports = this->ports();
     bool first = false;
     foreach(QNEPort *thisport, arrayports){
-        if(!(thisport->isOutput()) && !(thisport->typed) && !(thisport->m_connections.empty())){
+        if(!(thisport->isOutput()) && !(thisport->typed)){
+            
+            if(thisport->m_connections.empty()){ //existuji nezapojene vstupni porty
+                exit(1);
+            }
+            
             if(first == false ){
                 first = true;
                 QNEConnection *c = thisport->m_connections.at(0);

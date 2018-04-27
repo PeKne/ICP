@@ -28,6 +28,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 #include <QGraphicsPathItem>
 
+#include <QLineEdit>
+
+
 class QNEPort;
 
 class QNEBlock : public QGraphicsPathItem
@@ -63,8 +66,11 @@ public:
     float value;
     float input1;
     float input2;
+    bool input1def = false;
+    bool input2def = false;
     bool def;
-    char oper;
+    int oper;
+    QLineEdit *InputField;
 };
 
 #endif // QNEBLOCK_H

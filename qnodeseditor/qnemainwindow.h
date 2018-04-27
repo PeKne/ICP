@@ -28,6 +28,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 #include <QMainWindow>
 #include <QtWidgets>
+#include <vector>
+
+#include "qneblock.h"
 
 
 class QNodesEditor;
@@ -55,6 +58,8 @@ private slots:
     void add_block_input();
     void add_block_output();
 
+    void debug_app();
+
 private:
 
 	QNodesEditor *nodesEditor;
@@ -63,6 +68,7 @@ private:
     QMenu *menu3;
     QGraphicsView *view;
     QGraphicsScene *scene;
+    std::vector<QNEBlock*> vector_bloku;
 };
 
 #endif // QNEMAINWINDOW_H

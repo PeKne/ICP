@@ -26,13 +26,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 #include "qnemainwindow.h"
 #include "ui_qnemainwindow.h"
 
-#include "qneblock.h"
 #include "qnodeseditor.h"
 
 #include <QGraphicsScene>
 #include <QFileDialog>
-
+#include <QInputDialog>
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <algorithm>
 #include "qneport.h"
+
 
 
 QNEMainWindow::QNEMainWindow(QWidget *parent) :
@@ -41,6 +45,7 @@ QNEMainWindow::QNEMainWindow(QWidget *parent) :
 
 
     scene = new QGraphicsScene();
+    scene->setSceneRect(0,0,800,800);
 
     // Vytvoreni akci pro menu
     QAction *QA_add = new QAction(tr("&Add Block+"), this);
@@ -60,11 +65,11 @@ QNEMainWindow::QNEMainWindow(QWidget *parent) :
     connect(QA_mul, SIGNAL(triggered()), this, SLOT(add_block_mul()));
 
     QAction *QA_output = new QAction(tr("&Add Block Output*"), this);
-    QA_add->setStatusTip(tr("Add new block*"));
+    QA_add->setStatusTip(tr("Add new OUTPUT"));
     connect(QA_output, SIGNAL(triggered()), this, SLOT(add_block_output()));
 
     QAction *QA_input = new QAction(tr("&Add Block Input"), this);
-    QA_add->setStatusTip(tr("Add new block*"));
+    QA_add->setStatusTip(tr("Add new INPUT"));
     connect(QA_input, SIGNAL(triggered()), this, SLOT(add_block_input()));
 /*
     QAction *QA_run = new QAction(tr("&Run"), this);
@@ -74,11 +79,11 @@ QNEMainWindow::QNEMainWindow(QWidget *parent) :
     QAction *QA_stop = new QAction(tr("&Stop"), this);
     QA_add->setStatusTip(tr("Stop"));
     connect(QA_stop, SIGNAL(triggered()), this, SLOT(stop_app()));
-
+*/
     QAction *QA_debug = new QAction(tr("&Debug"), this);
     QA_add->setStatusTip(tr("Debug"));
     connect(QA_debug, SIGNAL(triggered()), this, SLOT(debug_app()));
-*/
+
     QAction *QA_load = new QAction(tr("&Load"), this);
     QA_load->setShortcuts(QKeySequence::Open);
     QA_load->setStatusTip(tr("Open file"));
@@ -99,6 +104,8 @@ QNEMainWindow::QNEMainWindow(QWidget *parent) :
     menu2 = menuBar()->addMenu(tr("&Block"));
     menu3 = menuBar()->addMenu(tr("&Action"));
 
+
+
     menu1->addAction(QA_save);
     menu1->addAction(QA_load);
     menu1->addSeparator();
@@ -110,17 +117,21 @@ QNEMainWindow::QNEMainWindow(QWidget *parent) :
     menu2->addAction(QA_mul);
     menu2->addAction(QA_input);
     menu2->addAction(QA_output);
+
+    menu3->addAction(QA_debug);
 /*
     menu3->addAction(QA_run);
     menu3->addAction(QA_stop);
-    menu3->addAction(QA_debug);
+    float input_val;
+    input_val = QInputDialog::getDouble(0, "INPUT VALUE",
+                "Please enter your value:", 0);
 */
 
 
 
     setWindowTitle(tr("Schema editor v1"));
 
-    QDockWidget *dock = new QDockWidget(tr("Actual schema"), this);
+    QDockWidget *dock = new QDockWidget(tr("Actual scheme"), this);
     dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     view = new QGraphicsView(dock);
     view->setScene(scene);
@@ -130,34 +141,9 @@ QNEMainWindow::QNEMainWindow(QWidget *parent) :
     dock->setWidget(view);
     addDockWidget(Qt::LeftDockWidgetArea, dock);
 
-
-
-
-
-
-
-
     nodesEditor = new QNodesEditor(this);
     nodesEditor->install(scene);
 
-/*
-    QNEBlock *b = new QNEBlock(0);
-    scene->addItem(b);
-    b->addPort("test", 0, QNEPort::NamePort);
-    b->addPort("TestBlock", 0, QNEPort::TypePort);
-    b->addInputPort("in1");
-    b->addInputPort("in2");
-    b->addInputPort("in3");
-    b->addOutputPort("out1");
-    b->addOutputPort("out2");
-    b->addOutputPort("out3");
-
-    b = b->clone();
-    b->setPos(150, 0);
-
-    b = b->clone();
-    b->setPos(150, 150);
-    */
 }
 
 QNEMainWindow::~QNEMainWindow()
@@ -193,73 +179,100 @@ void QNEMainWindow::add_block_add()
     QNEBlock *b = new QNEBlock(0);
 
     scene->addItem(b);
-    b->oper = '+';
+    b->oper = 1;
     b->addPort("ADD(+)", 0, QNEPort::NamePort);
     b->addPort("In", 0, 0, 0);
     b->addPort("In", 0, 0, 0);
     b->addPort("Out", 1, 0, 0);
     b->setPos(view->sceneRect().center().toPoint());
+    this->vector_bloku.push_back(b);
 }
 void QNEMainWindow::add_block_sub()
 {
     QNEBlock *b = new QNEBlock(0);
 
     scene->addItem(b);
-    b->oper = '-';
+    b->oper = 2;
     b->addPort("SUB(-)", 0, QNEPort::NamePort);
     b->addPort("In", 0, 0, 0);
     b->addPort("In", 0, 0, 0);
     b->addPort("Out", 1, 0, 0);
     b->setPos(view->sceneRect().center().toPoint());
+    this->vector_bloku.push_back(b);
 }
-void QNEMainWindow::add_block_div()
-{
-    QNEBlock *b = new QNEBlock(0);
 
-    scene->addItem(b);
-    b->oper = '/';
-    b->addPort("DIV(/)", 0, QNEPort::NamePort);
-    b->addPort("In", 0, 0, 0);
-    b->addPort("In", 0, 0, 0);
-    b->addPort("Out", 1, 0, 0);
-    b->setPos(view->sceneRect().center().toPoint());
-}
 void QNEMainWindow::add_block_mul()
 {
     QNEBlock *b = new QNEBlock(0);
 
     scene->addItem(b);
-    b->oper = '/';
+    b->oper = 3;
     b->addPort("MUV(*)", 0, QNEPort::NamePort);
     b->addPort("In", 0, 0, 0);
     b->addPort("In", 0, 0, 0);
     b->addPort("Out", 1, 0, 0);
     //QLineEdit* text1 = new QLineEdit("Some Text");
     QGraphicsSimpleTextItem *text1 = new QGraphicsSimpleTextItem;
-    text1->setPos(-200, -150);
-
-    text1->setText("This is an arbitrary English sentence");
-
-    scene->addItem(text1);
     b->setPos(view->sceneRect().center().toPoint());
+    this->vector_bloku.push_back(b);
 }
-void QNEMainWindow::add_block_input()
+
+void QNEMainWindow::add_block_div()
 {
     QNEBlock *b = new QNEBlock(0);
 
     scene->addItem(b);
-    b->oper = 'K';
-    b->addPort("INPUT", 0, QNEPort::NamePort);
+    b->oper = 4;
+    b->addPort("DIV(/)", 0, QNEPort::NamePort);
+    b->addPort("In", 0, 0, 0);
+    b->addPort("In", 0, 0, 0);
     b->addPort("Out", 1, 0, 0);
     b->setPos(view->sceneRect().center().toPoint());
+    this->vector_bloku.push_back(b);
+}
+void QNEMainWindow::add_block_input()
+{
+    float input_val;
+    input_val = QInputDialog::getDouble(0, "INPUT VALUE",
+                "Please enter your value:", 0);
+
+
+    std::string str_val = std::to_string(input_val);
+    const char* showed_value = str_val.c_str();
+    QNEBlock *b = new QNEBlock(0);
+    scene->addItem(b);
+    b->oper = 5;
+    b->addPort("INPUT", 0, QNEPort::NamePort);
+    b->addPort(showed_value, 0, QNEPort::NamePort);
+    b->addPort("Out", 1, 0, 0);
+    b->setPos(view->sceneRect().center().toPoint());
+    b->input1 = input_val;
+    b->input1def = true;
+    this->vector_bloku.push_back(b);
 }
 void QNEMainWindow::add_block_output()
 {
     QNEBlock *b = new QNEBlock(0);
 
     scene->addItem(b);
-    b->oper = '=';
+    b->oper = 6;
     b->addPort("OUTPUT", 0, QNEPort::NamePort);
     b->addPort("In", 0, 0, 0);
     b->setPos(view->sceneRect().center().toPoint());
+    this->vector_bloku.push_back(b);
+}
+
+void QNEMainWindow::debug_app(){
+
+        foreach (QNEBlock* current, vector_bloku) {
+
+            if (!(current->def) && (current->oper != 5)){
+
+                current->calculate();
+
+//                if (current->def){
+
+//                }
+            }
+        }
 }
