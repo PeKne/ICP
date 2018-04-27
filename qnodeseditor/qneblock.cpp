@@ -219,16 +219,16 @@ void QNEBlock::fetch_inputs(){
             if(first == false ){
                 first = true;
                 QNEConnection *c = thisport->m_connections.at(0);
-                if(thisport->m_connections[0]->m_port1->m_block->def == true){
+                if(thisport->m_connections[0]->m_port1->m_block->def == true && thisport->m_connections[0]->m_port1->m_block->calculated == false){
                     this->input1 = thisport->m_connections[0]->m_port1->m_block->value;
-                    this->input1def =true;
+                    this->input1def = true;
                 }else{
                     break;
                 }
             }else{
-                if(thisport->m_connections[0]->m_port1->m_block->def == true){
+                if(thisport->m_connections[0]->m_port1->m_block->def == true && thisport->m_connections[0]->m_port1->m_block->calculated == false){
                     this->input2 = thisport->m_connections[0]->m_port1->m_block->value;
-                    this->input2def =true;
+                    this->input2def = true;
                 }
                 break;
             }
@@ -240,54 +240,61 @@ void QNEBlock::calculate(){
     if(!(this->oper == 5)){
         this->fetch_inputs();
      }
+
     switch(this->oper){
         case 1:
             if(this->input1def && this->input2def){
                 this->value = this->input1 + this->input2;
                 this->def = true;
-                std::cout << this->value;
-                break;
-            }
+                this->calculated = true;
+
+            }break;
 
 
         case 2:
             if(this->input1def && this->input2def){
                 this->value = this->input1 - this->input2;
                 this->def = true;
-                break;
-            }
+                this->calculated = true;
+
+            }break;
 
 
         case 3:
             if(this->input1def && this->input2def){
                 this->value = this->input1 * this->input2;
                 this->def = true;
-                break;
-            }
+                this->calculated = true;
+
+            }break;
 
 
         case 4:
             if(this->input1def && this->input2def){
                 this->value = this->input1 / this->input2;
                 this->def = true;
-                break;
-            }
+                this->calculated = true;
+
+            }break;
 
 
         case 5:
             if(this->input1def){
                 this->value = this->input1;
                 this->def = true;
-                break;
-            }
+                this->calculated = true;
+
+            }break;
 
 
         case 6:
             if(this->input1def){
                 this->value = this->input1;
                 this->def = true;
-                break;
-            }
+                this->calculated = true;
+
+            }break;
+
         default:
             break;
 

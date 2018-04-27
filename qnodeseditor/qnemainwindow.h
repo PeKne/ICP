@@ -46,11 +46,7 @@ public:
 private slots:
 	void saveFile();
 	void loadFile();
-    /*
-    void run_app();
-    void stop_app();
-    void debug_app();
-    */
+
     void add_block_add();
     void add_block_sub();
     void add_block_div();
@@ -58,6 +54,8 @@ private slots:
     void add_block_input();
     void add_block_output();
 
+    void run_app();
+    void stop_app();
     void debug_app();
 
 private:

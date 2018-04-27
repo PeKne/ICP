@@ -68,8 +68,9 @@ public:
     float input2;
     bool input1def = false;
     bool input2def = false;
-    bool def;
+    bool def = false;
     int oper;
+    bool calculated = false;
     QLineEdit *InputField;
 };
 

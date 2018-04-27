@@ -31,12 +31,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 #include <QGraphicsScene>
 #include <QFileDialog>
 #include <QInputDialog>
+#include <QThread>
 #include <iostream>
 #include <string>
 #include <sstream>
 #include <algorithm>
 #include "qneport.h"
+#include <iostream>
+#include <string>
 
+using namespace std;
 
 
 QNEMainWindow::QNEMainWindow(QWidget *parent) :
@@ -64,14 +68,14 @@ QNEMainWindow::QNEMainWindow(QWidget *parent) :
     QA_add->setStatusTip(tr("Add new block*"));
     connect(QA_mul, SIGNAL(triggered()), this, SLOT(add_block_mul()));
 
-    QAction *QA_output = new QAction(tr("&Add Block Output*"), this);
+    QAction *QA_output = new QAction(tr("&Add Block Output"), this);
     QA_add->setStatusTip(tr("Add new OUTPUT"));
     connect(QA_output, SIGNAL(triggered()), this, SLOT(add_block_output()));
 
     QAction *QA_input = new QAction(tr("&Add Block Input"), this);
     QA_add->setStatusTip(tr("Add new INPUT"));
     connect(QA_input, SIGNAL(triggered()), this, SLOT(add_block_input()));
-/*
+
     QAction *QA_run = new QAction(tr("&Run"), this);
     QA_add->setStatusTip(tr("Run"));
     connect(QA_run, SIGNAL(triggered()), this, SLOT(run_app()));
@@ -79,7 +83,7 @@ QNEMainWindow::QNEMainWindow(QWidget *parent) :
     QAction *QA_stop = new QAction(tr("&Stop"), this);
     QA_add->setStatusTip(tr("Stop"));
     connect(QA_stop, SIGNAL(triggered()), this, SLOT(stop_app()));
-*/
+
     QAction *QA_debug = new QAction(tr("&Debug"), this);
     QA_add->setStatusTip(tr("Debug"));
     connect(QA_debug, SIGNAL(triggered()), this, SLOT(debug_app()));
@@ -119,9 +123,9 @@ QNEMainWindow::QNEMainWindow(QWidget *parent) :
     menu2->addAction(QA_output);
 
     menu3->addAction(QA_debug);
-/*
     menu3->addAction(QA_run);
     menu3->addAction(QA_stop);
+/*
     float input_val;
     input_val = QInputDialog::getDouble(0, "INPUT VALUE",
                 "Please enter your value:", 0);
@@ -184,6 +188,7 @@ void QNEMainWindow::add_block_add()
     b->addPort("In", 0, 0, 0);
     b->addPort("In", 0, 0, 0);
     b->addPort("Out", 1, 0, 0);
+    b->addPort("   ", 1, QNEPort::TypePort);
     b->setPos(view->sceneRect().center().toPoint());
     this->vector_bloku.push_back(b);
 }
@@ -197,6 +202,7 @@ void QNEMainWindow::add_block_sub()
     b->addPort("In", 0, 0, 0);
     b->addPort("In", 0, 0, 0);
     b->addPort("Out", 1, 0, 0);
+    b->addPort("   ", 1, QNEPort::TypePort);
     b->setPos(view->sceneRect().center().toPoint());
     this->vector_bloku.push_back(b);
 }
@@ -207,12 +213,11 @@ void QNEMainWindow::add_block_mul()
 
     scene->addItem(b);
     b->oper = 3;
-    b->addPort("MUV(*)", 0, QNEPort::NamePort);
+    b->addPort("MUL(*)", 0, QNEPort::NamePort);
     b->addPort("In", 0, 0, 0);
     b->addPort("In", 0, 0, 0);
     b->addPort("Out", 1, 0, 0);
-    //QLineEdit* text1 = new QLineEdit("Some Text");
-    QGraphicsSimpleTextItem *text1 = new QGraphicsSimpleTextItem;
+    b->addPort("   ", 1, QNEPort::TypePort);
     b->setPos(view->sceneRect().center().toPoint());
     this->vector_bloku.push_back(b);
 }
@@ -227,6 +232,7 @@ void QNEMainWindow::add_block_div()
     b->addPort("In", 0, 0, 0);
     b->addPort("In", 0, 0, 0);
     b->addPort("Out", 1, 0, 0);
+    b->addPort("   ", 1, QNEPort::TypePort);
     b->setPos(view->sceneRect().center().toPoint());
     this->vector_bloku.push_back(b);
 }
@@ -245,6 +251,7 @@ void QNEMainWindow::add_block_input()
     b->addPort("INPUT", 0, QNEPort::NamePort);
     b->addPort(showed_value, 0, QNEPort::NamePort);
     b->addPort("Out", 1, 0, 0);
+    b->addPort("   ", 1, QNEPort::TypePort);
     b->setPos(view->sceneRect().center().toPoint());
     b->input1 = input_val;
     b->input1def = true;
@@ -258,6 +265,7 @@ void QNEMainWindow::add_block_output()
     b->oper = 6;
     b->addPort("OUTPUT", 0, QNEPort::NamePort);
     b->addPort("In", 0, 0, 0);
+    b->addPort("   ", 0, QNEPort::TypePort);
     b->setPos(view->sceneRect().center().toPoint());
     this->vector_bloku.push_back(b);
 }
@@ -266,13 +274,110 @@ void QNEMainWindow::debug_app(){
 
         foreach (QNEBlock* current, vector_bloku) {
 
-            if (!(current->def) && (current->oper != 5)){
-
+            if (!(current->def)){
                 current->calculate();
+            }
 
-//                if (current->def){
+            if(current->def == true  && current->calculated == true){
+                QVector<QNEPort*> arrayport = current->ports();
 
-//                }
+                if(current->oper < 5)
+                    arrayport[4]->setName(QString::number(current->value));
+                else if(current->oper == 5)
+                    arrayport[3]->setName(QString::number(current->value));
+                else if(current->oper == 6)
+                    arrayport[2]->setName(QString::number(current->value));
+
+                /*
+                if(current->oper == 6){
+                    current->addPort(QString::number(current->value), 0, QNEPort::TypePort);
+                }
+                else{
+                    current->addPort(QString::number(current->value), 1, QNEPort::TypePort);
+                }*/
             }
         }
+
+        foreach (QNEBlock* current, vector_bloku) {
+            current->calculated = false;
+        }
+}
+void QNEMainWindow::run_app(){
+    while(1){
+
+        bool definition = false;
+
+        foreach (QNEBlock* current, vector_bloku) {
+            if (!(current->def)){
+                current->calculate();
+                if(current->def){
+                    definition = true;
+                }
+            }
+
+            if(current->def == true  && current->calculated == true){
+                // Zpomalení výpočtu
+                // nefunguje
+                QThread::msleep(100);
+                // Přidání výpisu hodnoty
+                QVector<QNEPort*> arrayport = current->ports();
+                if(current->def){
+                    if(current->oper < 5)
+                        arrayport[4]->setName(QString::number(current->value));
+                    else if(current->oper == 5)
+                        arrayport[3]->setName(QString::number(current->value));
+                    else if(current->oper == 6)
+                        arrayport[2]->setName(QString::number(current->value));
+                }
+                /*
+                if(current->oper == 6){
+                    current->addPort(QString::number(current->value), 0, QNEPort::TypePort);
+                }
+                else{
+                    current->addPort(QString::number(current->value), 1, QNEPort::TypePort);
+                }*/
+            }
+        }
+
+        // Vymazani atributu calculated pro danou sekvenci
+        foreach (QNEBlock* current, vector_bloku) {
+            current->calculated = false;
+        }
+
+        // Pokud se nadefinuje ani jeden blok -> konec
+        if(definition == false){
+            break;
+        }
+    }
+}
+void QNEMainWindow::stop_app(){
+    foreach (QNEBlock* current, vector_bloku) {
+        // Input / Output
+        QVector<QNEPort*> arrayport = current->ports();
+        if(current->oper == 5){
+             arrayport[3]->setName("   ");
+            current->def = false;
+            continue;
+        }
+
+
+        if(current->def){
+            if(current->oper < 5)
+                arrayport[4]->setName("   ");
+            if(current->oper == 6)
+                arrayport[2]->setName("   ");
+        }
+
+        current->value = 0;
+
+        current->input1 = 0;
+        current->input2 = 0;
+
+        current->input1def = false;
+        current->input2def = false;
+
+        current->calculated = false;
+        current->def = false;
+
+    }
 }
