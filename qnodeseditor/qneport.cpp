@@ -105,7 +105,7 @@ void QNEPort::setPortFlags(int f)
     {
         this->typed = true;
 		QFont font(scene()->font());
-        //font.setItalic(true);
+        font.setBold(true);
 		label->setFont(font);
         setPath(QPainterPath());
 	} else if (m_portFlags & NamePort)

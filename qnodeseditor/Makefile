@@ -199,6 +199,7 @@ DIST          = ../../../../Qt5.7.0/5.7/clang_64/mkspecs/features/spec_pre.prf \
 		../../../../Qt5.7.0/5.7/clang_64/mkspecs/features/qt_config.prf \
 		../../../../Qt5.7.0/5.7/clang_64/mkspecs/macx-clang/qmake.conf \
 		../../../../Qt5.7.0/5.7/clang_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		../../../../Qt5.7.0/5.7/clang_64/mkspecs/features/exclusive_builds.prf \
 		../../../../Qt5.7.0/5.7/clang_64/mkspecs/features/default_pre.prf \
 		../../../../Qt5.7.0/5.7/clang_64/mkspecs/features/mac/default_pre.prf \
@@ -226,8 +227,7 @@ DIST          = ../../../../Qt5.7.0/5.7/clang_64/mkspecs/features/spec_pre.prf \
 		qneport.h \
 		qneconnection.h \
 		qnodeseditor.h \
-		mainwindow.h \
-		block.h main.cpp \
+		mainwindow.h main.cpp \
 		qnemainwindow.cpp \
 		qneblock.cpp \
 		qneport.cpp \
@@ -378,6 +378,7 @@ Makefile: qnodeseditor.pro ../../../../Qt5.7.0/5.7/clang_64/mkspecs/macx-clang/q
 		../../../../Qt5.7.0/5.7/clang_64/mkspecs/features/qt_config.prf \
 		../../../../Qt5.7.0/5.7/clang_64/mkspecs/macx-clang/qmake.conf \
 		../../../../Qt5.7.0/5.7/clang_64/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		../../../../Qt5.7.0/5.7/clang_64/mkspecs/features/exclusive_builds.prf \
 		../../../../Qt5.7.0/5.7/clang_64/mkspecs/features/default_pre.prf \
 		../../../../Qt5.7.0/5.7/clang_64/mkspecs/features/mac/default_pre.prf \
@@ -537,6 +538,7 @@ Makefile: qnodeseditor.pro ../../../../Qt5.7.0/5.7/clang_64/mkspecs/macx-clang/q
 ../../../../Qt5.7.0/5.7/clang_64/mkspecs/features/qt_config.prf:
 ../../../../Qt5.7.0/5.7/clang_64/mkspecs/macx-clang/qmake.conf:
 ../../../../Qt5.7.0/5.7/clang_64/mkspecs/features/spec_post.prf:
+.qmake.stash:
 ../../../../Qt5.7.0/5.7/clang_64/mkspecs/features/exclusive_builds.prf:
 ../../../../Qt5.7.0/5.7/clang_64/mkspecs/features/default_pre.prf:
 ../../../../Qt5.7.0/5.7/clang_64/mkspecs/features/mac/default_pre.prf:
@@ -592,7 +594,7 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents qnemainwindow.h qneblock.h qneport.h qneconnection.h qnodeseditor.h mainwindow.h block.h $(DISTDIR)/
+	$(COPY_FILE) --parents qnemainwindow.h qneblock.h qneport.h qneconnection.h qnodeseditor.h mainwindow.h $(DISTDIR)/
 	$(COPY_FILE) --parents main.cpp qnemainwindow.cpp qneblock.cpp qneport.cpp qneconnection.cpp qnodeseditor.cpp mainwindow.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents mainwindow.ui $(DISTDIR)/
 
@@ -752,6 +754,9 @@ moc_qnemainwindow.cpp: ../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/qtoolbox.h \
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/qtoolbutton.h \
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/qtwidgetsversion.h \
+		qneblock.h \
+		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/QGraphicsPathItem \
+		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/QLineEdit \
 		qnemainwindow.h \
 		../../../../Qt5.7.0/5.7/clang_64/bin/moc
 	/Users/kalabza/Qt5.7.0/5.7/clang_64/bin/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -I/Users/kalabza/Qt5.7.0/5.7/clang_64/mkspecs/macx-clang -I/Users/kalabza/Desktop/ICP/ICP/qnodeseditor -I/Users/kalabza/Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers -I/Users/kalabza/Qt5.7.0/5.7/clang_64/lib/QtGui.framework/Headers -I/Users/kalabza/Qt5.7.0/5.7/clang_64/lib/QtCore.framework/Headers -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include/c++/v1 -I/usr/local/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/9.0.0/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -I/usr/include -I'/System/Library/Frameworks (framework directory)' -I'/Library/Frameworks (framework directory)' -F/Users/kalabza/Qt5.7.0/5.7/clang_64/lib qnemainwindow.h -o moc_qnemainwindow.cpp
@@ -919,7 +924,10 @@ main.o: main.cpp ../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Header
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/qtwidgetsversion.h \
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/QApplication \
 		qnemainwindow.h \
-		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/QMainWindow
+		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/QMainWindow \
+		qneblock.h \
+		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/QGraphicsPathItem \
+		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/QLineEdit
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
 
 qnemainwindow.o: qnemainwindow.cpp qnemainwindow.h \
@@ -1052,6 +1060,9 @@ qnemainwindow.o: qnemainwindow.cpp qnemainwindow.h \
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/qtoolbox.h \
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/qtoolbutton.h \
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/qtwidgetsversion.h \
+		qneblock.h \
+		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/QGraphicsPathItem \
+		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/QLineEdit \
 		ui_qnemainwindow.h \
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/QAction \
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/QApplication \
@@ -1062,19 +1073,22 @@ qnemainwindow.o: qnemainwindow.cpp qnemainwindow.h \
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/QMenuBar \
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/QToolBar \
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/QVBoxLayout \
-		qneblock.h \
-		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/QGraphicsPathItem \
 		qnodeseditor.h \
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtCore.framework/Headers/QObject \
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtCore.framework/Headers/qobject.h \
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/QGraphicsScene \
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/QFileDialog \
+		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/QInputDialog \
+		../../../../Qt5.7.0/5.7/clang_64/lib/QtCore.framework/Headers/QThread \
+		../../../../Qt5.7.0/5.7/clang_64/lib/QtCore.framework/Headers/qthread.h \
 		qneport.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qnemainwindow.o qnemainwindow.cpp
 
 qneblock.o: qneblock.cpp qneblock.h \
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/QGraphicsPathItem \
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/qgraphicsitem.h \
+		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/QLineEdit \
+		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/qlineedit.h \
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtGui.framework/Headers/QPen \
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtGui.framework/Headers/qpen.h \
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/QGraphicsScene \
@@ -1083,6 +1097,7 @@ qneblock.o: qneblock.cpp qneblock.h \
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtGui.framework/Headers/qfontmetrics.h \
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtGui.framework/Headers/QPainter \
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtGui.framework/Headers/qpainter.h \
+		qneconnection.h \
 		qneport.h \
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/QStyleOptionGraphicsItem \
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/qstyleoption.h
@@ -1125,7 +1140,9 @@ qnodeseditor.o: qnodeseditor.cpp qnodeseditor.h \
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/QGraphicsPathItem \
 		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/qgraphicsitem.h \
 		qneconnection.h \
-		qneblock.h
+		qneblock.h \
+		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/QLineEdit \
+		../../../../Qt5.7.0/5.7/clang_64/lib/QtWidgets.framework/Headers/qlineedit.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qnodeseditor.o qnodeseditor.cpp
 
 mainwindow.o: mainwindow.cpp mainwindow.h \

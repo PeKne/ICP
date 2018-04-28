@@ -25,8 +25,7 @@ HEADERS  += qnemainwindow.h \
     qneport.h \
     qneconnection.h \
     qnodeseditor.h \
-    mainwindow.h \
-    block.h
+    mainwindow.h
 
 FORMS += \
     mainwindow.ui

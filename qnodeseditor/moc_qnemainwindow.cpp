@@ -20,7 +20,7 @@
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_QNEMainWindow_t {
     QByteArrayData data[13];
-    char stringdata0[149];
+    char stringdata0[150];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -40,14 +40,14 @@ QT_MOC_LITERAL(7, 75, 13), // "add_block_mul"
 QT_MOC_LITERAL(8, 89, 15), // "add_block_input"
 QT_MOC_LITERAL(9, 105, 16), // "add_block_output"
 QT_MOC_LITERAL(10, 122, 7), // "run_app"
-QT_MOC_LITERAL(11, 130, 8), // "stop_app"
-QT_MOC_LITERAL(12, 139, 9) // "debug_app"
+QT_MOC_LITERAL(11, 130, 9), // "reset_app"
+QT_MOC_LITERAL(12, 140, 9) // "debug_app"
 
     },
     "QNEMainWindow\0saveFile\0\0loadFile\0"
     "add_block_add\0add_block_sub\0add_block_div\0"
     "add_block_mul\0add_block_input\0"
-    "add_block_output\0run_app\0stop_app\0"
+    "add_block_output\0run_app\0reset_app\0"
     "debug_app"
 };
 #undef QT_MOC_LITERAL
@@ -109,7 +109,7 @@ void QNEMainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _i
         case 6: _t->add_block_input(); break;
         case 7: _t->add_block_output(); break;
         case 8: _t->run_app(); break;
-        case 9: _t->stop_app(); break;
+        case 9: _t->reset_app(); break;
         case 10: _t->debug_app(); break;
         default: ;
         }

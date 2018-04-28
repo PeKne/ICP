@@ -36,13 +36,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 QNEBlock::QNEBlock(QGraphicsItem *parent) : QGraphicsPathItem(parent)
 {
 	QPainterPath p;
-	p.addRoundedRect(-50, -15, 100, 30, 5, 5);
+    p.addRoundedRect(-50, -15, 100, 30, 5, 5);
 	setPath(p);
 	setPen(QPen(Qt::darkGreen));
 	setBrush(Qt::green);
 	setFlag(QGraphicsItem::ItemIsMovable);
 	setFlag(QGraphicsItem::ItemIsSelectable);
-	horzMargin = 20;
+    horzMargin = 50;
 	vertMargin = 5;
 	width = horzMargin;
     height = vertMargin;
@@ -61,7 +61,7 @@ QNEPort* QNEBlock::addPort(const QString &name, bool isOutput, int flags, int pt
 	int w = fm.width(name);
 	int h = fm.height();
 	// port->setPos(0, height + h/2);
-	if (w > width - horzMargin)
+    if (w > width - horzMargin)
 		width = w + horzMargin;
 	height += h;
 
@@ -71,14 +71,19 @@ QNEPort* QNEBlock::addPort(const QString &name, bool isOutput, int flags, int pt
 
 	int y = -height / 2 + vertMargin + port->radius();
     foreach(QGraphicsItem *port_, childItems()) {
-		if (port_->type() != QNEPort::Type)
-			continue;
+        if (port_->type() != QNEPort::Type){
+            continue;
+        }
 
 		QNEPort *port = (QNEPort*) port_;
-		if (port->isOutput())
-			port->setPos(width/2 + port->radius(), y);
-		else
-			port->setPos(-width/2 - port->radius(), y);
+        if (port->isOutput() && port->portFlags() == QNEPort::TypePort)
+            port->setPos(width/2 - width + 40, y);
+        else if (port->isOutput() && port->portFlags() != QNEPort::TypePort)
+            port->setPos(width/2 + port->radius(), y);
+        else if (!(port->isOutput()) && port->portFlags() == QNEPort::TypePort)
+            port->setPos(-width/2, y);
+        else if (!(port->isOutput()) && port->portFlags() != QNEPort::TypePort)
+            port->setPos(-width/2 - port->radius(), y);
 		y += h;
 	}
 
@@ -218,7 +223,7 @@ void QNEBlock::fetch_inputs(){
         if(!(thisport->isOutput()) && !(thisport->typed) && !(thisport->m_connections.empty())){
             if(first == false ){
                 first = true;
-                QNEConnection *c = thisport->m_connections.at(0);
+                //QNEConnection *c = thisport->m_connections.at(0);
                 if(thisport->m_connections[0]->m_port1->m_block->def == true && thisport->m_connections[0]->m_port1->m_block->calculated == false){
                     this->input1 = thisport->m_connections[0]->m_port1->m_block->value;
                     this->input1def = true;

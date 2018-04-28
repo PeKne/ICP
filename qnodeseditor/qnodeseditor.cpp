@@ -100,7 +100,7 @@ bool QNodesEditor::eventFilter(QObject *o, QEvent *e)
 		}
 	}
 	case QEvent::GraphicsSceneMouseMove:
-	{
+	{   
 		if (conn)
 		{
 			conn->setPos2(me->scenePos());
@@ -119,14 +119,14 @@ bool QNodesEditor::eventFilter(QObject *o, QEvent *e)
 				QNEPort *port1 = conn->port1();
 				QNEPort *port2 = (QNEPort*) item;
 
-				if (port1->block() != port2->block() && port1->isOutput() != port2->isOutput() && !port1->isConnected(port2))
-				{
+                if ((!port2->isConnected(port2) && !port2->isOutput()) && port1->block() != port2->block() && port1->isOutput() != port2->isOutput() && !port1->isConnected(port2))
+                {
 					conn->setPos2(port2->scenePos());
-					conn->setPort2(port2);
+                    conn->setPort2(port2);
 					conn->updatePath();
 					conn = 0;
 					return true;
-				}
+                }
 			}
 
 			delete conn;

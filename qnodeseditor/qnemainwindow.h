@@ -55,7 +55,7 @@ private slots:
     void add_block_output();
 
     void run_app();
-    void stop_app();
+    void reset_app();
     void debug_app();
 
 private:
