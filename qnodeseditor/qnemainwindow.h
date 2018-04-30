@@ -58,6 +58,8 @@ private slots:
     void reset_app();
     void debug_app();
 
+    void delay();
+
 private:
 
 	QNodesEditor *nodesEditor;

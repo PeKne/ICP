@@ -38,7 +38,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 #include <algorithm>
 #include "qneport.h"
 #include <iostream>
-#include <string>
+#include <unistd.h>
 
 using namespace std;
 
@@ -269,11 +269,15 @@ void QNEMainWindow::add_block_output()
 }
 
 void QNEMainWindow::debug_app(){
-        // TODO dodelat zmenu barvy vsech bloku na puvodni barvu
-        //
-        //
+
+    foreach (QNEBlock * current, vector_bloku) { // nastaveni vsech bloku na puvodni barvu
+        current->setSelected(false);
+    }
+
+
 
         foreach (QNEBlock* current, vector_bloku) {
+
 
             if (!(current->def)){
                 current->calculate();
@@ -282,9 +286,8 @@ void QNEMainWindow::debug_app(){
             if(current->def == true  && current->calculated == true){
                 QVector<QNEPort*> arrayport = current->ports();
 
-                // TODO dodelat zmenu barvy tohoto current bloku na barvu calculated
-                //
-                //
+
+                current->setSelected(true); // zmena barvy prave pocitaneho bloku
 
                 if(current->oper < 5)
                     arrayport[4]->setName(QString::number(current->value,'f',3));
@@ -293,6 +296,7 @@ void QNEMainWindow::debug_app(){
                 else if(current->oper == 6)
                     arrayport[2]->setName(QString::number(current->value,'f',3));
             }
+
         }
 
         foreach (QNEBlock* current, vector_bloku) {
@@ -303,7 +307,7 @@ void QNEMainWindow::run_app(){
     while(1){
 
         bool definition = false;
-        QThread::msleep(500);
+
         foreach (QNEBlock* current, vector_bloku) {
             // Provede calculate nad blokama ktere nejsou nadefinovane
             if (!(current->def)){
@@ -314,20 +318,29 @@ void QNEMainWindow::run_app(){
             }
 
             if(current->def == true  && current->calculated == true){
-                // TODO Zpomalení výpočtu
-                // nefunguje
 
                 // Přidání výpisu hodnoty
                 QVector<QNEPort*> arrayport = current->ports();
 
                 // Zmena label textu vysledku calculated bloku
                 if(current->def){
+
+                    foreach (QNEBlock * b, vector_bloku) { // nastaveni vsech bloku na puvodni barvu
+                        b->setSelected(false);
+                    }
+
+                    current->setSelected(true); // nastaveni barvy pocitaneho bloku
+
+
                     if(current->oper < 5)
                         arrayport[4]->setName(QString::number(current->value,'f',3));
                     else if(current->oper == 5)
                         arrayport[3]->setName(QString::number(current->value,'f',3));
                     else if(current->oper == 6)
                         arrayport[2]->setName(QString::number(current->value,'f',3));
+
+                    this->delay(); // pozastaveni aplikace
+
                 }
             }
         }
@@ -346,6 +359,9 @@ void QNEMainWindow::run_app(){
 void QNEMainWindow::reset_app(){
     foreach (QNEBlock* current, vector_bloku) {
         // Input / Output
+
+        current->setSelected(false);
+
         QVector<QNEPort*> arrayport = current->ports();
         if(current->oper == 5){
              arrayport[3]->setName("");
@@ -373,4 +389,10 @@ void QNEMainWindow::reset_app(){
         current->def = false;
 
     }
+}
+
+void QNEMainWindow::delay(){
+    QTime dieTime= QTime::currentTime().addSecs(2);
+    while (QTime::currentTime() < dieTime)
+        QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 }

@@ -39,6 +39,7 @@ QNEConnection::QNEConnection(QGraphicsItem *parent) : QGraphicsPathItem(parent)
 	setZValue(-1);
 	m_port1 = 0;
 	m_port2 = 0;
+    this->setToolTip("undefined");
 }
 
 QNEConnection::~QNEConnection()
