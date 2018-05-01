@@ -227,6 +227,7 @@ void QNEBlock::fetch_inputs(){
                 if(thisport->m_connections[0]->m_port1->m_block->def == true && thisport->m_connections[0]->m_port1->m_block->calculated == false){
                     this->input1 = thisport->m_connections[0]->m_port1->m_block->value;
                     thisport->m_connections[0]->setToolTip(QString::number(this->input1,'f',3)); // set value for hover over connection
+                    this->input1def = true;
                 }else{
                     break;
                 }
