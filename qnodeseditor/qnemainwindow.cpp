@@ -469,8 +469,17 @@ void QNEMainWindow::delay(){
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
 }
 void QNEMainWindow::new_file(){
-    this->vector_bloku.clear();
-    nodesEditor->clear();
+    QMessageBox::StandardButton reply;
+      reply = QMessageBox::question(this, "NEW SCHEME", "Do you really want to create new scheme?\n"
+                                                        "Current unsaved scheme will be deleted!!!",
+                                    QMessageBox::Yes|QMessageBox::No);
+      if (reply == QMessageBox::Yes) {
+          this->vector_bloku.clear();
+          nodesEditor->clear();
+      } else {
+
+      }
+
 }
 
 bool QNEMainWindow::validate_scheme(){
