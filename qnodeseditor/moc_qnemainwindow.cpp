@@ -19,8 +19,8 @@
 
 QT_BEGIN_MOC_NAMESPACE
 struct qt_meta_stringdata_QNEMainWindow_t {
-    QByteArrayData data[13];
-    char stringdata0[150];
+    QByteArrayData data[16];
+    char stringdata0[179];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -33,22 +33,25 @@ QT_MOC_LITERAL(0, 0, 13), // "QNEMainWindow"
 QT_MOC_LITERAL(1, 14, 8), // "saveFile"
 QT_MOC_LITERAL(2, 23, 0), // ""
 QT_MOC_LITERAL(3, 24, 8), // "loadFile"
-QT_MOC_LITERAL(4, 33, 13), // "add_block_add"
-QT_MOC_LITERAL(5, 47, 13), // "add_block_sub"
-QT_MOC_LITERAL(6, 61, 13), // "add_block_div"
-QT_MOC_LITERAL(7, 75, 13), // "add_block_mul"
-QT_MOC_LITERAL(8, 89, 15), // "add_block_input"
-QT_MOC_LITERAL(9, 105, 16), // "add_block_output"
-QT_MOC_LITERAL(10, 122, 7), // "run_app"
-QT_MOC_LITERAL(11, 130, 9), // "reset_app"
-QT_MOC_LITERAL(12, 140, 9) // "debug_app"
+QT_MOC_LITERAL(4, 33, 8), // "new_file"
+QT_MOC_LITERAL(5, 42, 13), // "add_block_add"
+QT_MOC_LITERAL(6, 56, 13), // "add_block_sub"
+QT_MOC_LITERAL(7, 70, 13), // "add_block_div"
+QT_MOC_LITERAL(8, 84, 13), // "add_block_mul"
+QT_MOC_LITERAL(9, 98, 13), // "add_block_pow"
+QT_MOC_LITERAL(10, 112, 15), // "add_block_input"
+QT_MOC_LITERAL(11, 128, 16), // "add_block_output"
+QT_MOC_LITERAL(12, 145, 7), // "run_app"
+QT_MOC_LITERAL(13, 153, 9), // "reset_app"
+QT_MOC_LITERAL(14, 163, 9), // "debug_app"
+QT_MOC_LITERAL(15, 173, 5) // "delay"
 
     },
     "QNEMainWindow\0saveFile\0\0loadFile\0"
-    "add_block_add\0add_block_sub\0add_block_div\0"
-    "add_block_mul\0add_block_input\0"
-    "add_block_output\0run_app\0reset_app\0"
-    "debug_app"
+    "new_file\0add_block_add\0add_block_sub\0"
+    "add_block_div\0add_block_mul\0add_block_pow\0"
+    "add_block_input\0add_block_output\0"
+    "run_app\0reset_app\0debug_app\0delay"
 };
 #undef QT_MOC_LITERAL
 
@@ -58,7 +61,7 @@ static const uint qt_meta_data_QNEMainWindow[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      11,   14, // methods
+      14,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -66,19 +69,25 @@ static const uint qt_meta_data_QNEMainWindow[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,   69,    2, 0x08 /* Private */,
-       3,    0,   70,    2, 0x08 /* Private */,
-       4,    0,   71,    2, 0x08 /* Private */,
-       5,    0,   72,    2, 0x08 /* Private */,
-       6,    0,   73,    2, 0x08 /* Private */,
-       7,    0,   74,    2, 0x08 /* Private */,
-       8,    0,   75,    2, 0x08 /* Private */,
-       9,    0,   76,    2, 0x08 /* Private */,
-      10,    0,   77,    2, 0x08 /* Private */,
-      11,    0,   78,    2, 0x08 /* Private */,
-      12,    0,   79,    2, 0x08 /* Private */,
+       1,    0,   84,    2, 0x08 /* Private */,
+       3,    0,   85,    2, 0x08 /* Private */,
+       4,    0,   86,    2, 0x08 /* Private */,
+       5,    0,   87,    2, 0x08 /* Private */,
+       6,    0,   88,    2, 0x08 /* Private */,
+       7,    0,   89,    2, 0x08 /* Private */,
+       8,    0,   90,    2, 0x08 /* Private */,
+       9,    0,   91,    2, 0x08 /* Private */,
+      10,    0,   92,    2, 0x08 /* Private */,
+      11,    0,   93,    2, 0x08 /* Private */,
+      12,    0,   94,    2, 0x08 /* Private */,
+      13,    0,   95,    2, 0x08 /* Private */,
+      14,    0,   96,    2, 0x08 /* Private */,
+      15,    0,   97,    2, 0x08 /* Private */,
 
  // slots: parameters
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -102,15 +111,18 @@ void QNEMainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _i
         switch (_id) {
         case 0: _t->saveFile(); break;
         case 1: _t->loadFile(); break;
-        case 2: _t->add_block_add(); break;
-        case 3: _t->add_block_sub(); break;
-        case 4: _t->add_block_div(); break;
-        case 5: _t->add_block_mul(); break;
-        case 6: _t->add_block_input(); break;
-        case 7: _t->add_block_output(); break;
-        case 8: _t->run_app(); break;
-        case 9: _t->reset_app(); break;
-        case 10: _t->debug_app(); break;
+        case 2: _t->new_file(); break;
+        case 3: _t->add_block_add(); break;
+        case 4: _t->add_block_sub(); break;
+        case 5: _t->add_block_div(); break;
+        case 6: _t->add_block_mul(); break;
+        case 7: _t->add_block_pow(); break;
+        case 8: _t->add_block_input(); break;
+        case 9: _t->add_block_output(); break;
+        case 10: _t->run_app(); break;
+        case 11: _t->reset_app(); break;
+        case 12: _t->debug_app(); break;
+        case 13: _t->delay(); break;
         default: ;
         }
     }
@@ -142,13 +154,13 @@ int QNEMainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 11)
+        if (_id < 14)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 11;
+        _id -= 14;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 11)
+        if (_id < 14)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 11;
+        _id -= 14;
     }
     return _id;
 }

@@ -68,6 +68,10 @@ QNEMainWindow::QNEMainWindow(QWidget *parent) :
     QA_add->setStatusTip(tr("Add new block*"));
     connect(QA_mul, SIGNAL(triggered()), this, SLOT(add_block_mul()));
 
+    QAction *QA_pow = new QAction(tr("&Add Block^"), this);
+    QA_pow->setStatusTip(tr("Add new block^"));
+    connect(QA_pow, SIGNAL(triggered()), this, SLOT(add_block_pow()));
+
     QAction *QA_output = new QAction(tr("&Add Block Output"), this);
     QA_add->setStatusTip(tr("Add new OUTPUT"));
     connect(QA_output, SIGNAL(triggered()), this, SLOT(add_block_output()));
@@ -98,6 +102,10 @@ QNEMainWindow::QNEMainWindow(QWidget *parent) :
     QA_save->setStatusTip(tr("Save file"));
     connect(QA_save, SIGNAL(triggered()), this, SLOT(saveFile()));
 
+    QAction *QA_new = new QAction(tr("&New"), this);
+    QA_new->setStatusTip(tr("New file"));
+    connect(QA_new, SIGNAL(triggered()), this, SLOT(new_file()));
+
     QAction *QA_quit = new QAction(tr("&Quit"), this);
     QA_quit->setShortcuts(QKeySequence::Quit);
     QA_quit->setStatusTip(tr("Quit the app"));
@@ -109,7 +117,7 @@ QNEMainWindow::QNEMainWindow(QWidget *parent) :
     menu3 = menuBar()->addMenu(tr("&Action"));
 
 
-
+    menu1->addAction(QA_new);
     menu1->addAction(QA_save);
     menu1->addAction(QA_load);
     menu1->addSeparator();
@@ -119,23 +127,19 @@ QNEMainWindow::QNEMainWindow(QWidget *parent) :
     menu2->addAction(QA_sub);
     menu2->addAction(QA_div);
     menu2->addAction(QA_mul);
+    menu2->addAction(QA_pow);
     menu2->addAction(QA_input);
     menu2->addAction(QA_output);
 
     menu3->addAction(QA_debug);
     menu3->addAction(QA_run);
     menu3->addAction(QA_reset);
-/*
-    float input_val;
-    input_val = QInputDialog::getDouble(0, "INPUT VALUE",
-                "Please enter your value:", 0);
-*/
 
 
 
-    setWindowTitle(tr("Schema editor v1"));
+    setWindowTitle(tr("BlockEditor"));
 
-    QDockWidget *dock = new QDockWidget(tr("New Schema"), this);
+    QDockWidget *dock = new QDockWidget(tr("Schema"), this);
     dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     view = new QGraphicsView(dock);
     view->setScene(scene);
@@ -176,7 +180,15 @@ void QNEMainWindow::loadFile()
 	QFile f(fname);
 	f.open(QFile::ReadOnly);
 	QDataStream ds(&f);
+    this->vector_bloku.clear();
 	nodesEditor->load(ds);
+
+    foreach(QGraphicsItem *item, nodesEditor->scene->items()){
+        if (item->type() == QNEBlock::Type)
+        {
+        this->vector_bloku.push_back((QNEBlock*) item);
+        }
+    }
 
 }
 void QNEMainWindow::add_block_add()
@@ -237,6 +249,7 @@ void QNEMainWindow::add_block_div()
     b->setPos(view->sceneRect().center().toPoint());
     this->vector_bloku.push_back(b);
 }
+
 void QNEMainWindow::add_block_input()
 {
     float input_val;
@@ -255,6 +268,7 @@ void QNEMainWindow::add_block_input()
     b->input1def = true;
     this->vector_bloku.push_back(b);
 }
+
 void QNEMainWindow::add_block_output()
 {
     QNEBlock *b = new QNEBlock(0);
@@ -268,42 +282,78 @@ void QNEMainWindow::add_block_output()
     this->vector_bloku.push_back(b);
 }
 
-void QNEMainWindow::debug_app(){
+void QNEMainWindow::add_block_pow()
+{
+    QNEBlock *b = new QNEBlock(0);
 
+    scene->addItem(b);
+    b->oper = 7;
+    b->addPort("POW(^)", 0, QNEPort::NamePort);
+    b->addPort("In", 0, 0, 0);
+    b->addPort("In", 0, 0, 0);
+    b->addPort("Out", 1, 0, 0);
+    b->addPort("", 1, QNEPort::TypePort);
+    b->setPos(view->sceneRect().center().toPoint());
+    this->vector_bloku.push_back(b);
+}
+
+void QNEMainWindow::debug_app(){
+    this->vector_bloku.clear();
+    foreach (QGraphicsItem * current, nodesEditor->scene->items()) { // nastaveni vsech bloku na puvodni barvu
+        if (current && current->type() == QNEBlock::Type)
+        {
+        QNEBlock* b = (QNEBlock*) current;
+        this->vector_bloku.push_back(b);
+        }
+    }
     foreach (QNEBlock * current, vector_bloku) { // nastaveni vsech bloku na puvodni barvu
         current->setSelected(false);
     }
 
 
-
-        foreach (QNEBlock* current, vector_bloku) {
-
-
-            if (!(current->def)){
-                current->calculate();
-            }
-
-            if(current->def == true  && current->calculated == true){
-                QVector<QNEPort*> arrayport = current->ports();
+    foreach (QNEBlock* current, vector_bloku) {
 
 
-                current->setSelected(true); // zmena barvy prave pocitaneho bloku
-
-                if(current->oper < 5)
-                    arrayport[4]->setName(QString::number(current->value,'f',3));
-                else if(current->oper == 5)
-                    arrayport[3]->setName(QString::number(current->value,'f',3));
-                else if(current->oper == 6)
-                    arrayport[2]->setName(QString::number(current->value,'f',3));
-            }
-
+        if (!(current->def)){
+            current->calculate();
         }
 
-        foreach (QNEBlock* current, vector_bloku) {
-            current->calculated = false;
+        if(current->def == true  && current->calculated == true){
+            QVector<QNEPort*> arrayport = current->ports();
+
+            current->setSelected(true); // zmena barvy prave pocitaneho bloku
+
+            if(current->oper < 5)
+                arrayport[4]->setName(QString::number(current->value,'f',3));
+            else if(current->oper == 5)
+                arrayport[3]->setName(QString::number(current->value,'f',3));
+            else if(current->oper == 6)
+                arrayport[2]->setName(QString::number(current->value,'f',3));
+            else if(current->oper == 7)
+                arrayport[4]->setName(QString::number(current->value,'f',3));
+            break;
         }
+
+    }
+
+    foreach (QNEBlock* current, vector_bloku) {
+        current->calculated = false;
+    }
+
+
 }
 void QNEMainWindow::run_app(){
+    this->vector_bloku.clear();
+    foreach (QGraphicsItem * current, nodesEditor->scene->items()) { // nastaveni vsech bloku na puvodni barvu
+        if (current && current->type() == QNEBlock::Type)
+        {
+        QNEBlock* b = (QNEBlock*) current;
+        this->vector_bloku.push_back(b);
+        }
+    }
+
+    reset_app();
+
     while(1){
 
         bool definition = false;
@@ -338,6 +388,8 @@ void QNEMainWindow::run_app(){
                         arrayport[3]->setName(QString::number(current->value,'f',3));
                     else if(current->oper == 6)
                         arrayport[2]->setName(QString::number(current->value,'f',3));
+                    else if(current->oper == 7)
+                        arrayport[4]->setName(QString::number(current->value,'f',3));
 
                     this->delay(); // pozastaveni aplikace
 
@@ -357,6 +409,15 @@ void QNEMainWindow::run_app(){
     }
 }
 void QNEMainWindow::reset_app(){
+    this->vector_bloku.clear();
+    foreach (QGraphicsItem * current, nodesEditor->scene->items()) { // nastaveni vsech bloku na puvodni barvu
+        if (current && current->type() == QNEBlock::Type)
+        {
+        QNEBlock* b = (QNEBlock*) current;
+        this->vector_bloku.push_back(b);
+        }
+    }
+
     foreach (QNEBlock* current, vector_bloku) {
         // Input / Output
 
@@ -364,8 +425,9 @@ void QNEMainWindow::reset_app(){
 
         QVector<QNEPort*> arrayport = current->ports();
         if(current->oper == 5){
-             arrayport[3]->setName("");
+            arrayport[3]->setName("");
             current->def = false;
+            current->calculated = false;
             continue;
         }
 
@@ -375,6 +437,8 @@ void QNEMainWindow::reset_app(){
                 arrayport[4]->setName("");
             if(current->oper == 6)
                 arrayport[2]->setName("");
+            if(current->oper == 7)
+                arrayport[4]->setName("");
         }
 
         current->value = 0;
@@ -395,4 +459,8 @@ void QNEMainWindow::delay(){
     QTime dieTime= QTime::currentTime().addSecs(2);
     while (QTime::currentTime() < dieTime)
         QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
+}
+void QNEMainWindow::new_file(){
+    this->vector_bloku.clear();
+    nodesEditor->clear();
 }

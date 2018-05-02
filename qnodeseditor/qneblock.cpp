@@ -32,6 +32,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 #include <iostream>
 #include "qneconnection.h"
 #include "qneport.h"
+#include "math.h"
 
 QNEBlock::QNEBlock(QGraphicsItem *parent) : QGraphicsPathItem(parent)
 {
@@ -60,9 +61,9 @@ QNEPort* QNEBlock::addPort(const QString &name, bool isOutput, int flags, int pt
 	QFontMetrics fm(scene()->font());
 	int w = fm.width(name);
 	int h = fm.height();
-	// port->setPos(0, height + h/2);
+     //port->setPos(0, height + h/2);
     if (w > width - horzMargin)
-		width = w + horzMargin;
+        width = w + horzMargin;
 	height += h;
 
 	QPainterPath p;
@@ -135,10 +136,26 @@ void QNEBlock::save(QDataStream &ds)
 
 		QNEPort *port = (QNEPort*) port_;
 		ds << (quint64) port;
-		ds << port->portName();
-		ds << port->isOutput();
+        ds << port->portName();
+        ds << port->isOutput();
 		ds << port->portFlags();
+
 	}
+
+    //
+    ds << this->horzMargin;
+    ds << this->vertMargin;
+    ds << this->width;
+    ds << this->height;
+    ds << this->value;
+    ds << this->input1;
+    ds << this->input2;
+    ds << this->input1def;
+    ds << this->input2def;
+    ds << this->def;
+    ds << this->oper;
+    ds << this->calculated;
+    //
 }
 
 void QNEBlock::load(QDataStream &ds, QMap<quint64, QNEPort*> &portMap)
@@ -159,8 +176,24 @@ void QNEBlock::load(QDataStream &ds, QMap<quint64, QNEPort*> &portMap)
 		ds >> name;
 		ds >> output;
 		ds >> flags;
-		portMap[ptr] = addPort(name, output, flags, ptr);
+
+        portMap[ptr] = addPort(name, output, flags, ptr);
 	}
+
+    //
+    ds >> this->horzMargin;
+    ds >> this->vertMargin;
+    ds >> this->width;
+    ds >> this->height;
+    ds >> this->value;
+    ds >> this->input1;
+    ds >> this->input2;
+    ds >> this->input1def;
+    ds >> this->input2def;
+    ds >> this->def;
+    ds >> this->oper;
+    ds >> this->calculated;
+    //
 }
 
 #include <QStyleOptionGraphicsItem>
@@ -223,7 +256,6 @@ void QNEBlock::fetch_inputs(){
         if(!(thisport->isOutput()) && !(thisport->typed) && !(thisport->m_connections.empty())){
             if(first == false ){
                 first = true;
-                //QNEConnection *c = thisport->m_connections.at(0);
                 if(thisport->m_connections[0]->m_port1->m_block->def == true && thisport->m_connections[0]->m_port1->m_block->calculated == false){
                     this->input1 = thisport->m_connections[0]->m_port1->m_block->value;
                     thisport->m_connections[0]->setToolTip(QString::number(this->input1,'f',3)); // set value for hover over connection
@@ -301,6 +333,15 @@ void QNEBlock::calculate(){
                 this->calculated = true;
 
             }break;
+
+        case 7:
+            if(this->input1def && this->input2def){
+                this->value = pow(this->input1,this->input2);
+                this->def = true;
+                this->calculated = true;
+
+            }break;
+
 
         default:
             break;

@@ -44,13 +44,14 @@ public:
 
 	bool eventFilter(QObject *, QEvent *);
 
+    void clear();
 	void save(QDataStream &ds);
 	void load(QDataStream &ds);
 
 private:
 	QGraphicsItem *itemAt(const QPointF&);
 
-private:
+public:
 	QGraphicsScene *scene;
 	QNEConnection *conn;
 	// QNEBlock *selBlock;

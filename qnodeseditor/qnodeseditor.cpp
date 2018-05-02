@@ -82,19 +82,46 @@ bool QNodesEditor::eventFilter(QObject *o, QEvent *e)
 				return true;
 			} else if (item && item->type() == QNEBlock::Type)
 			{
-				/* if (selBlock)
-					selBlock->setSelected(); */
-				// selBlock = (QNEBlock*) item;
+                /* if (selBlock)
+                    selBlock->setSelected(); */
+                // selBlock = (QNEBlock*) item;
 			}
 			break;
 		}
 		case Qt::RightButton:
 		{
 			QGraphicsItem *item = itemAt(me->scenePos());
-			if (item && (item->type() == QNEConnection::Type || item->type() == QNEBlock::Type))
+            if (item && (item->type() == QNEConnection::Type))
+            {
 				delete item;
-			// if (selBlock == (QNEBlock*) item)
-				// selBlock = 0;
+            }
+            if (item && (item->type() == QNEBlock::Type))
+            {
+                QNEBlock* b = (QNEBlock*) item;
+
+                foreach (QGraphicsItem *current, scene->items())
+                {
+                    if (current && (current->type() == QNEConnection::Type))
+                    {
+                        QNEConnection* conn = (QNEConnection*) current;
+                        foreach(QGraphicsItem *port_, b->childItems())
+                        {
+                            if(conn->port1() == port_ || conn->port2() == port_)
+                            {
+                                delete current;
+                            }
+                        }
+
+                    }
+                }
+                // TODO block se vizualne smaze ze sceny, ale QNEMainWindow má furt uložený block ve vektor_bloku
+                // proto aplikace paada po smazani bloku a spusteni debug/run/reset
+                //delete b;
+                delete item;
+
+            }
+            // if (selBlock == (QNEBlock*) item)
+                // selBlock = 0;
 			break;
 		}
 		}
@@ -119,7 +146,7 @@ bool QNodesEditor::eventFilter(QObject *o, QEvent *e)
 				QNEPort *port1 = conn->port1();
 				QNEPort *port2 = (QNEPort*) item;
 
-                if ((!port2->isConnected(port2) && !port2->isOutput()) && port1->block() != port2->block() && port1->isOutput() != port2->isOutput() && !port1->isConnected(port2))
+                if (port1->block() != port2->block() && port1->isOutput() != port2->isOutput() && !port1->isConnected(port2))
                 {
 					conn->setPos2(port2->scenePos());
                     conn->setPort2(port2);
@@ -158,7 +185,7 @@ void QNodesEditor::save(QDataStream &ds)
 
 void QNodesEditor::load(QDataStream &ds)
 {
-	scene->clear();
+    scene->clear();
 
 	QMap<quint64, QNEPort*> portMap;
 
@@ -171,6 +198,7 @@ void QNodesEditor::load(QDataStream &ds)
             QNEBlock *block = new QNEBlock(0);
             scene->addItem(block);
 			block->load(ds, portMap);
+
 		} else if (type == QNEConnection::Type)
 		{
             QNEConnection *conn = new QNEConnection(0);
@@ -178,4 +206,8 @@ void QNodesEditor::load(QDataStream &ds)
 			conn->load(ds, portMap);
 		}
 	}
+}
+void QNodesEditor::clear()
+{
+    scene->clear();
 }

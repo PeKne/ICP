@@ -46,11 +46,13 @@ public:
 private slots:
 	void saveFile();
 	void loadFile();
+    void new_file();
 
     void add_block_add();
     void add_block_sub();
     void add_block_div();
     void add_block_mul();
+    void add_block_pow();
     void add_block_input();
     void add_block_output();
 
