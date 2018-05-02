@@ -60,6 +60,8 @@ private slots:
     void reset_app();
     void debug_app();
 
+    bool validate_scheme();
+    bool check_cycles(QNEBlock* current, std::vector<QNEBlock*> in_path);
     void delay();
 
 private:

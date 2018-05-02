@@ -25,8 +25,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 
 #include "qnemainwindow.h"
 #include "ui_qnemainwindow.h"
-
 #include "qnodeseditor.h"
+#include "qneport.h"
+#include "qneconnection.h"
 
 #include <QGraphicsScene>
 #include <QFileDialog>
@@ -36,9 +37,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
 #include <string>
 #include <sstream>
 #include <algorithm>
-#include "qneport.h"
 #include <iostream>
 #include <unistd.h>
+#include <QMessageBox>
+#include <algorithm>
 
 using namespace std;
 
@@ -298,115 +300,121 @@ void QNEMainWindow::add_block_pow()
 }
 
 void QNEMainWindow::debug_app(){
-    this->vector_bloku.clear();
-    foreach (QGraphicsItem * current, nodesEditor->scene->items()) { // nastaveni vsech bloku na puvodni barvu
-        if (current && current->type() == QNEBlock::Type)
-        {
-        QNEBlock* b = (QNEBlock*) current;
-        this->vector_bloku.push_back(b);
+    bool valid = this->validate_scheme();
+    if(valid){
+        this->vector_bloku.clear();
+        foreach (QGraphicsItem * current, nodesEditor->scene->items()) { // nastaveni vsech bloku na puvodni barvu
+            if (current && current->type() == QNEBlock::Type)
+            {
+            QNEBlock* b = (QNEBlock*) current;
+            this->vector_bloku.push_back(b);
+            }
         }
-    }
-    foreach (QNEBlock * current, vector_bloku) { // nastaveni vsech bloku na puvodni barvu
-        current->setSelected(false);
-    }
-
-
-    foreach (QNEBlock* current, vector_bloku) {
-
-
-        if (!(current->def)){
-            current->calculate();
+        foreach (QNEBlock * current, vector_bloku) { // nastaveni vsech bloku na puvodni barvu
+            current->setSelected(false);
         }
 
-        if(current->def == true  && current->calculated == true){
-            QVector<QNEPort*> arrayport = current->ports();
-
-            current->setSelected(true); // zmena barvy prave pocitaneho bloku
-
-            if(current->oper < 5)
-                arrayport[4]->setName(QString::number(current->value,'f',3));
-            else if(current->oper == 5)
-                arrayport[3]->setName(QString::number(current->value,'f',3));
-            else if(current->oper == 6)
-                arrayport[2]->setName(QString::number(current->value,'f',3));
-            else if(current->oper == 7)
-                arrayport[4]->setName(QString::number(current->value,'f',3));
-            break;
-        }
-
-    }
-
-    foreach (QNEBlock* current, vector_bloku) {
-        current->calculated = false;
-    }
-
-
-}
-void QNEMainWindow::run_app(){
-    this->vector_bloku.clear();
-    foreach (QGraphicsItem * current, nodesEditor->scene->items()) { // nastaveni vsech bloku na puvodni barvu
-        if (current && current->type() == QNEBlock::Type)
-        {
-        QNEBlock* b = (QNEBlock*) current;
-        this->vector_bloku.push_back(b);
-        }
-    }
-
-    reset_app();
-
-    while(1){
-
-        bool definition = false;
 
         foreach (QNEBlock* current, vector_bloku) {
-            // Provede calculate nad blokama ktere nejsou nadefinovane
+
+
             if (!(current->def)){
-                current->calculate();
-                if(current->def){
-                    definition = true;
-                }
+            current->calculate();
             }
 
             if(current->def == true  && current->calculated == true){
-
-                // Přidání výpisu hodnoty
                 QVector<QNEPort*> arrayport = current->ports();
 
-                // Zmena label textu vysledku calculated bloku
-                if(current->def){
+                current->setSelected(true); // zmena barvy prave pocitaneho bloku
 
-                    foreach (QNEBlock * b, vector_bloku) { // nastaveni vsech bloku na puvodni barvu
-                        b->setSelected(false);
-                    }
-
-                    current->setSelected(true); // nastaveni barvy pocitaneho bloku
-
-
-                    if(current->oper < 5)
-                        arrayport[4]->setName(QString::number(current->value,'f',3));
-                    else if(current->oper == 5)
-                        arrayport[3]->setName(QString::number(current->value,'f',3));
-                    else if(current->oper == 6)
-                        arrayport[2]->setName(QString::number(current->value,'f',3));
-                    else if(current->oper == 7)
-                        arrayport[4]->setName(QString::number(current->value,'f',3));
-
-                    this->delay(); // pozastaveni aplikace
-
-                }
+                if(current->oper < 5)
+                    arrayport[4]->setName(QString::number(current->value,'f',3));
+                else if(current->oper == 5)
+                    arrayport[3]->setName(QString::number(current->value,'f',3));
+                else if(current->oper == 6)
+                    arrayport[2]->setName(QString::number(current->value,'f',3));
+                else if(current->oper == 7)
+                    arrayport[4]->setName(QString::number(current->value,'f',3));
+                break;
             }
+
         }
 
-        // Vymazani atributu calculated pro danou sekvenci -> 1 krok debugu
         foreach (QNEBlock* current, vector_bloku) {
             current->calculated = false;
         }
 
-        // Pokud se nadefinuje ani jeden blok -> konec
-        if(definition == false){
-            break;
-        }
     }
+}
+void QNEMainWindow::run_app(){
+
+    bool valid = this->validate_scheme();
+    if(valid){
+        this->vector_bloku.clear();
+        foreach (QGraphicsItem * current, nodesEditor->scene->items()) { // nastaveni vsech bloku na puvodni barvu
+            if (current && current->type() == QNEBlock::Type){
+            QNEBlock* b = (QNEBlock*) current;
+            this->vector_bloku.push_back(b);
+            }
+        }
+
+
+        reset_app();
+
+        while(1){
+
+            bool definition = false;
+
+            foreach (QNEBlock* current, vector_bloku) {
+                // Provede calculate nad blokama ktere nejsou nadefinovane
+                if (!(current->def)){
+                    current->calculate();
+                    if(current->def){
+                        definition = true;
+                    }
+                }
+
+                if(current->def == true  && current->calculated == true){
+
+                    // Přidání výpisu hodnoty
+                    QVector<QNEPort*> arrayport = current->ports();
+
+                    // Zmena label textu vysledku calculated bloku
+                    if(current->def){
+
+                        foreach (QNEBlock * b, vector_bloku) { // nastaveni vsech bloku na puvodni barvu
+                            b->setSelected(false);
+                        }
+
+                        current->setSelected(true); // nastaveni barvy pocitaneho bloku
+
+
+                        if(current->oper < 5)
+                            arrayport[4]->setName(QString::number(current->value,'f',3));
+                        else if(current->oper == 5)
+                            arrayport[3]->setName(QString::number(current->value,'f',3));
+                        else if(current->oper == 6)
+                            arrayport[2]->setName(QString::number(current->value,'f',3));
+                        else if(current->oper == 7)
+                            arrayport[4]->setName(QString::number(current->value,'f',3));
+
+                        this->delay(); // pozastaveni aplikace
+
+                    }
+                }
+            }
+
+            // Vymazani atributu calculated pro danou sekvenci -> 1 krok debugu
+            foreach (QNEBlock* current, vector_bloku) {
+                current->calculated = false;
+            }
+
+            // Pokud se nadefinuje ani jeden blok -> konec
+            if(definition == false){
+                break;
+            }
+        }
+     }
 }
 void QNEMainWindow::reset_app(){
     this->vector_bloku.clear();
@@ -464,3 +472,69 @@ void QNEMainWindow::new_file(){
     this->vector_bloku.clear();
     nodesEditor->clear();
 }
+
+bool QNEMainWindow::validate_scheme(){
+    foreach(QNEBlock *current, vector_bloku){
+
+        QVector<QNEPort*> current_ports = current->ports();
+        //kontrola pripojeni inputs
+        if(current->oper != 5){ // nejedna se o InputBlock
+            foreach(QNEPort *thisport, current_ports){
+                if(!(thisport->isOutput()) && !(thisport->typed) && (thisport->m_connections.empty())){
+                     QMessageBox::information(this, "WARNING: MISSING INPUT", "shceme contains unattached INPUT!!!\n"
+                                                                              "Calculation stopped. Please modify your scheme.");
+                     return false;
+                }
+            }
+        }
+
+
+        //kontrola pripojeni outputs
+        if(current->oper != 6){ // nejdna se o ConstBlock
+            foreach(QNEPort *thisport, current_ports){
+                if((thisport->isOutput()) && !(thisport->typed) && (thisport->m_connections.empty())){
+                     QMessageBox::information(this, "WARNING: MISSING OUTPUT", "Scheme contains unattached OUTPUT!!!\n"
+                                                                               "Calculation stopped. Please modify your scheme.");
+                     return false;
+                }
+            }
+        }
+
+        //kontrola cyklu
+        if(current->oper == 5){ // vychazime z Input Bloku
+           std::vector<QNEBlock*> in_path; // nove pole jiz kontrolovanych bloku
+           in_path.push_back(current);
+           if(!(this->check_cycles(current, in_path))){ // pokud je nalezen cyklus
+               QMessageBox::information(this, "WARNING: CYCLE DETECTED", "Scheme contains CYCLE!!!\n"
+                                                                         "Calculation stopped. Please modify your scheme.");
+
+               return false;
+           }
+        }
+
+    }
+    return true;
+}
+
+bool QNEMainWindow::check_cycles(QNEBlock* current, std::vector<QNEBlock*> in_path){
+     QVector<QNEPort*> current_ports = current->ports();
+     foreach(QNEPort *thisport, current_ports){ // pro kazdy port bloku
+        if((thisport->isOutput()) && !(thisport->typed) && !(thisport->m_connections.empty())){ // pokud je vystupni a neni prazdny
+            QNEBlock * next = thisport->m_connections[0]->m_port2->m_block; // ulozeni dalsiho bloku
+            if(std::find(in_path.begin(), in_path.end(), next) != in_path.end()) { // pokud uz pole tento blok obsahuje, je to cyklus
+                return false;
+            } else { // pokud ne, rekurzivne spoustime nad dalsim blokem
+                in_path.push_back(next);
+                bool returned_recursion =  this->check_cycles(next ,in_path);
+                return returned_recursion;
+            }
+
+
+        }
+
+    }
+
+     return true;
+}
+
+
