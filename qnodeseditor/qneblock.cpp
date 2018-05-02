@@ -52,7 +52,10 @@ QNEBlock::QNEBlock(QGraphicsItem *parent) : QGraphicsPathItem(parent)
 QNEPort* QNEBlock::addPort(const QString &name, bool isOutput, int flags, int ptr)
 {
 	QNEPort *port = new QNEPort(this);
-	port->setName(name);
+    if(flags == QNEPort::TypePort)
+        port->setName("");
+    else
+        port->setName(name);
 	port->setIsOutput(isOutput);
 	port->setNEBlock(this);
 	port->setPortFlags(flags);
@@ -86,7 +89,11 @@ QNEPort* QNEBlock::addPort(const QString &name, bool isOutput, int flags, int pt
         else if (!(port->isOutput()) && port->portFlags() != QNEPort::TypePort)
             port->setPos(-width/2 - port->radius(), y);
 		y += h;
+
 	}
+
+    if(flags == QNEPort::TypePort)
+        port->setName(name);
 
 	return port;
 }
@@ -129,24 +136,7 @@ void QNEBlock::save(QDataStream &ds)
 
 	ds << count;
 
-    foreach(QGraphicsItem *port_, childItems())
-	{
-		if (port_->type() != QNEPort::Type)
-			continue;
-
-		QNEPort *port = (QNEPort*) port_;
-		ds << (quint64) port;
-        ds << port->portName();
-        ds << port->isOutput();
-		ds << port->portFlags();
-
-	}
-
     //
-    ds << this->horzMargin;
-    ds << this->vertMargin;
-    ds << this->width;
-    ds << this->height;
     ds << this->value;
     ds << this->input1;
     ds << this->input2;
@@ -156,6 +146,19 @@ void QNEBlock::save(QDataStream &ds)
     ds << this->oper;
     ds << this->calculated;
     //
+
+    foreach(QGraphicsItem *port_, childItems())
+    {
+        if (port_->type() != QNEPort::Type)
+            continue;
+
+        QNEPort *port = (QNEPort*) port_;
+        ds << (quint64) port;
+        ds << port->portName();
+        ds << port->isOutput();
+        ds << port->portFlags();
+
+    }
 }
 
 void QNEBlock::load(QDataStream &ds, QMap<quint64, QNEPort*> &portMap)
@@ -165,26 +168,9 @@ void QNEBlock::load(QDataStream &ds, QMap<quint64, QNEPort*> &portMap)
 	setPos(p);
 	int count;
 	ds >> count;
-	for (int i = 0; i < count; i++)
-	{
-		QString name;
-		bool output;
-		int flags;
-		quint64 ptr;
-
-		ds >> ptr;
-		ds >> name;
-		ds >> output;
-		ds >> flags;
-
-        portMap[ptr] = addPort(name, output, flags, ptr);
-	}
 
     //
-    ds >> this->horzMargin;
-    ds >> this->vertMargin;
-    ds >> this->width;
-    ds >> this->height;
+
     ds >> this->value;
     ds >> this->input1;
     ds >> this->input2;
@@ -194,6 +180,21 @@ void QNEBlock::load(QDataStream &ds, QMap<quint64, QNEPort*> &portMap)
     ds >> this->oper;
     ds >> this->calculated;
     //
+
+    for (int i = 0; i < count; i++)
+    {
+        QString name;
+        bool output;
+        int flags;
+        quint64 ptr;
+
+        ds >> ptr;
+        ds >> name;
+        ds >> output;
+        ds >> flags;
+
+        portMap[ptr] = addPort(name, output, flags, ptr);
+    }
 }
 
 #include <QStyleOptionGraphicsItem>

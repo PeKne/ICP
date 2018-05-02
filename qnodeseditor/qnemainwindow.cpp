@@ -51,7 +51,7 @@ QNEMainWindow::QNEMainWindow(QWidget *parent) :
 
 
     scene = new QGraphicsScene();
-    scene->setSceneRect(0,0,800,800);
+    scene->setSceneRect(0,0,850,850);
 
     // Vytvoreni akci pro menu
     QAction *QA_add = new QAction(tr("&Add Block+"), this);
@@ -141,7 +141,7 @@ QNEMainWindow::QNEMainWindow(QWidget *parent) :
 
     setWindowTitle(tr("BlockEditor"));
 
-    QDockWidget *dock = new QDockWidget(tr("Schema"), this);
+    QDockWidget *dock = new QDockWidget(tr(""), this);
     dock->setAllowedAreas(Qt::LeftDockWidgetArea | Qt::RightDockWidgetArea);
     view = new QGraphicsView(dock);
     view->setScene(scene);
@@ -300,16 +300,17 @@ void QNEMainWindow::add_block_pow()
 }
 
 void QNEMainWindow::debug_app(){
+    foreach (QGraphicsItem * current, nodesEditor->scene->items()) { // nastaveni vsech bloku na puvodni barvu
+        if (current && current->type() == QNEBlock::Type)
+        {
+        QNEBlock* b = (QNEBlock*) current;
+        this->vector_bloku.push_back(b);
+        }
+    }
+
     bool valid = this->validate_scheme();
     if(valid){
-        this->vector_bloku.clear();
-        foreach (QGraphicsItem * current, nodesEditor->scene->items()) { // nastaveni vsech bloku na puvodni barvu
-            if (current && current->type() == QNEBlock::Type)
-            {
-            QNEBlock* b = (QNEBlock*) current;
-            this->vector_bloku.push_back(b);
-            }
-        }
+
         foreach (QNEBlock * current, vector_bloku) { // nastaveni vsech bloku na puvodni barvu
             current->setSelected(false);
         }
@@ -347,17 +348,16 @@ void QNEMainWindow::debug_app(){
     }
 }
 void QNEMainWindow::run_app(){
+    foreach (QGraphicsItem * current, nodesEditor->scene->items()) { // nastaveni vsech bloku na puvodni barvu
+        if (current && current->type() == QNEBlock::Type)
+        {
+        QNEBlock* b = (QNEBlock*) current;
+        this->vector_bloku.push_back(b);
+        }
+    }
 
     bool valid = this->validate_scheme();
     if(valid){
-        this->vector_bloku.clear();
-        foreach (QGraphicsItem * current, nodesEditor->scene->items()) { // nastaveni vsech bloku na puvodni barvu
-            if (current && current->type() == QNEBlock::Type){
-            QNEBlock* b = (QNEBlock*) current;
-            this->vector_bloku.push_back(b);
-            }
-        }
-
 
         reset_app();
 

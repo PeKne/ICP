@@ -114,9 +114,7 @@ bool QNodesEditor::eventFilter(QObject *o, QEvent *e)
 
                     }
                 }
-                // TODO block se vizualne smaze ze sceny, ale QNEMainWindow má furt uložený block ve vektor_bloku
-                // proto aplikace paada po smazani bloku a spusteni debug/run/reset
-                //delete b;
+
                 delete item;
 
             }
@@ -146,7 +144,18 @@ bool QNodesEditor::eventFilter(QObject *o, QEvent *e)
 				QNEPort *port1 = conn->port1();
 				QNEPort *port2 = (QNEPort*) item;
 
-                if (port1->block() != port2->block() && port1->isOutput() != port2->isOutput() && !port1->isConnected(port2))
+                bool port2Empty = true;
+
+                foreach(QGraphicsItem *item, scene->items())
+                {
+                    if(item->type() != QNEPort::Type)
+                        continue;
+
+                    QNEPort* port = (QNEPort*) item;
+                    if(port2->isConnected(port))
+                        port2Empty = false;
+                }
+                if (port2Empty && port1->block() != port2->block() && port1->isOutput() != port2->isOutput() && !port1->isConnected(port2))
                 {
 					conn->setPos2(port2->scenePos());
                     conn->setPort2(port2);

@@ -125,6 +125,7 @@ void QNEConnection::load(QDataStream &ds, const QMap<quint64, QNEPort*> &portMap
 
 	setPort1(portMap[ptr1]);
 	setPort2(portMap[ptr2]);
+
 	updatePosFromPorts();
 	updatePath();
 }
