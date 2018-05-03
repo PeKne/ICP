@@ -1,3 +1,12 @@
+/*!
+ * School project for subject (The C++ Programming Language).
+ * This application is graphical editor of mathematical schemes.
+ * For more information check readme.txt
+ *
+ * @author Petr Knetl
+ * @author Marek Kalabza
+ */
+
 #include "block.h"
 
 #include <QGraphicsScene>
@@ -9,7 +18,11 @@
 #include "math.h"
 #include "connections.h"
 #include "port.h"
-
+/*!
+ * Constructor of graphical block. There are set information such size, shape, color etc.
+ *
+ * @param parent Superior graphical item of block
+ */
 Block::Block(QGraphicsItem *parent) : QGraphicsPathItem(parent)
 {
     setFlag(QGraphicsItem::ItemIsMovable);
@@ -29,6 +42,15 @@ Block::Block(QGraphicsItem *parent) : QGraphicsPathItem(parent)
     height = left_right_margin;
 }
 
+/*!
+ * Creation of new port in block.
+ *
+ * @param name name of port
+ * @param is_output define is new port will be input/output of block
+ * @param flags modifications of block (for example if port is able to be connected)
+ * @param ptr memory pointer of port
+ * @return
+ */
 Port* Block::add_port(const QString &name, bool is_output, int flags, int ptr)
 {
     Port *port = new Port(this);
@@ -92,12 +114,21 @@ Port* Block::add_port(const QString &name, bool is_output, int flags, int ptr)
 
     return port;
 }
-
+/*!
+ * Support method of add_port method
+ *
+ * @param name name of input port
+ */
 void Block::add_in_port(const QString &name)
 {
     add_port(name, false);
 }
 
+/*!
+ * Support method of add_port method
+ *
+ * @param name name of output port
+ */
 void Block::add_out_port(const QString &name)
 {
     add_port(name, true);
@@ -109,12 +140,22 @@ void Block::add_in_ports(const QStringList &names)
         add_in_port(n);
 }
 
+/*!
+ * Support method of add_port method
+ *
+ * @param name list  of output port names
+ */
 void Block::add_out_ports(const QStringList &names)
 {
     foreach(QString n, names)
         add_out_port(n);
 }
 
+/*!
+ * Transformation of block instance into data-stream. This method is caled when user requests save of whole scheme into file.
+ *
+ * @param DS data-stream where block data will be copied
+ */
 void Block::save(QDataStream &DS)
 {
     // Postupne ukladani informaci o bloku do DS
@@ -157,6 +198,11 @@ void Block::save(QDataStream &DS)
     }
 }
 
+/*!
+ * Transformation of data-stream into new block instance. This method is called when user requests load of whole scheme from file.
+ *
+ * @param DS data-stream from which block data will be copied
+ */
 void Block::load(QDataStream &DS, QMap<quint64, Port*> &port_map)
 {
     // Postupne brani informaci z DS
@@ -196,10 +242,16 @@ void Block::load(QDataStream &DS, QMap<quint64, Port*> &port_map)
 
 #include <QStyleOptionGraphicsItem>
 
-void Block::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+/*!
+ * Set color of block.
+ *
+ * @param painter painter of block
+ *
+ */
+void Block::paint(QPainter *painter/*/TODO: smazat!!!, const QStyleOptionGraphicsItem *option, QWidget *widget*/)
 {
-    Q_UNUSED(option)
-    Q_UNUSED(widget)
+//    Q_UNUSED(option)
+//    Q_UNUSED(widget)
 
     // Barevna zmena bloku
     if (isSelected()) {
@@ -223,11 +275,20 @@ QVector<Port*> Block::ports()
     return vector;
 }
 
-QVariant Block::itemChange(GraphicsItemChange change, const QVariant &value)
+/*!
+ * /TODO: co to je?
+ * @param value
+ * @return
+ */
+QVariant Block::itemChange(/*GraphicsItemChange change,*/ const QVariant &value)
 {
-    Q_UNUSED(change);
+    //Q_UNUSED(change);
     return value;
 }
+/*!
+ * Gets values of all blocks connected into input ports of this block.
+ * If input blocks are not defined, value of current block is set to undefined too.
+ */
 void Block::fetch_inputs(){
     // Urceni hodnot propojenych bloku
     QVector<Port*> arrayports = this->ports();
@@ -257,6 +318,9 @@ void Block::fetch_inputs(){
         }
     }
 }
+/*!
+ * Calculates value of current block. Final value depends on type of block(operator) and values connected to input ports.
+ */
 void Block::calculate(){
     //Vypocet propojenych bloku
     if(!(this->oper == 5)){

@@ -1,9 +1,17 @@
+/*!
+ * @author Petr Knetl
+ * @author Marek Kalabza
+ */
+
 #ifndef BLOCK_H
 #define BLOCK_H
 #include <QLineEdit>
 #include <QGraphicsPathItem>
 
 class Port;
+/*!
+ * This class contains information about graphical block and his backend attributes such a value.
+ */
 class Block : public QGraphicsPathItem
 {
 public:

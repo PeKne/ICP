@@ -1,3 +1,8 @@
+/*!
+ * @author Petr Knetl
+ * @author Marek Kalabza
+ */
+
 #ifndef EDITOR_H
 #define EDITOR_H
 
@@ -8,6 +13,10 @@ class Connection;
 class Block;
 class QGraphicsItem;
 class QPointF;
+
+/*!
+ * Graphical scene where whole scheme is showed and edited.
+ */
 class Editor : public QObject
 {
     Q_OBJECT

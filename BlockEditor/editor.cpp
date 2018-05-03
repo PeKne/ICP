@@ -1,3 +1,12 @@
+/*!
+ * School project for subject (The C++ Programming Language).
+ * This application is graphical editor of mathematical schemes.
+ * For more information check readme.txt
+ *
+ * @author Petr Knetl
+ * @author Marek Kalabza
+ */
+
 #include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 #include <QEvent>
@@ -8,13 +17,20 @@
 #include "port.h"
 #include "connections.h"
 
-
+/*!
+ * Constructor of editor.
+ * @param parent superior graphical item of new instance of editor.
+ */
 Editor::Editor(QObject *parent) :
     QObject(parent)
 {
     conn = 0;
 }
 
+/*!
+ * Setup of event filters of this editor for specific scene.
+ * @param s scene where event filters will be set up
+ */
 void Editor::install(QGraphicsScene *s)
 {
     // Nastaveni event filtru pro danou scenu
@@ -22,6 +38,12 @@ void Editor::install(QGraphicsScene *s)
     scene = s;
 }
 
+/*!
+ * Finds graphical object on position of mouse cursor.
+ *
+ * @param pos position of mouse cursor
+ * @return graphical item on success, 0 if method fails
+ */
 QGraphicsItem* Editor::itemAt(const QPointF &pos)
 {
     QList<QGraphicsItem*> items = scene->items(QRectF(pos - QPointF(1,1), QSize(3,3)));
@@ -34,6 +56,15 @@ QGraphicsItem* Editor::itemAt(const QPointF &pos)
     return 0;
 }
 
+/*!
+ * Handles Specific events evoked by user actions such mouse click, mouse release etc.
+ * Every event produce different action which change some attributes of whole scheme.
+ * For more information of specific events read source code.
+ *
+ * @param o object which catch event
+ * @param e specific event
+ * @return
+ */
 bool Editor::eventFilter(QObject *o, QEvent *e)
 {
     QGraphicsSceneMouseEvent *m_event = (QGraphicsSceneMouseEvent*) e;
@@ -163,6 +194,11 @@ bool Editor::eventFilter(QObject *o, QEvent *e)
     return QObject::eventFilter(o, e);
 }
 
+/*!
+ * Memory of whole scheme is copied into datastream. Data stream  is saved into file on user request.
+ *
+ * @param DS datastream where will be copied whole scheme
+ */
 void Editor::save(QDataStream &DS)
 {
     // Ulozeni kazdeho bloku na scene
@@ -184,6 +220,12 @@ void Editor::save(QDataStream &DS)
     }
 }
 
+/*!
+ * From datastream is loaded whole scheme is new instances of classes forming scheme.
+ * Data stream  is loaded from file on user request.
+ *
+ * @param DS datastream from which will be copied whole scheme
+ */
 void Editor::load(QDataStream &DS)
 {
     // Vymazani sceny
@@ -220,6 +262,10 @@ void Editor::load(QDataStream &DS)
         }
     }
 }
+
+/*!
+ * Deletes all objects (blocks, ports, connections) of scheme.
+ */
 void Editor::clear()
 {
     // Vymazani sceny

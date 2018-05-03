@@ -1,3 +1,12 @@
+/*!
+ * School project for subject (The C++ Programming Language).
+ * This application is graphical editor of mathematical schemes.
+ * For more information chech readme.txt
+ *
+ * @author Petr Knetl
+ * @author Marek Kalabza
+ */
+
 #include "port.h"
 
 #include "connections.h"
@@ -8,6 +17,11 @@
 
 #include <QPen>
 
+/*!
+ * constructor of port.
+ *
+ * @param parent superior graphical item of constructed block.
+ */
 Port::Port(QGraphicsItem *parent):
     QGraphicsPathItem(parent)
 {
@@ -28,6 +42,9 @@ Port::Port(QGraphicsItem *parent):
     my_port_flag = 0;
 }
 
+/*!
+ * destructor of port. Port is deleted.
+ */
 Port::~Port()
 {
     foreach(Connection *conn, my_connections)
@@ -36,11 +53,20 @@ Port::~Port()
     }
 }
 
+/*!
+ * Attach port to specific block.
+ *
+ * @param b block where is port located
+ */
 void Port::set_block(Block *b)
 {
     my_block = b;
 }
 
+/*!
+ * Sets name of port.
+ * @param n name of port
+ */
 void Port::set_name(const QString &n)
 {
     this->name = n;
@@ -48,6 +74,10 @@ void Port::set_name(const QString &n)
     label->setPlainText(n);
 }
 
+/*!
+ * Specify if port is output or input of block.
+ * @param o true if output, false if input
+ */
 void Port::set_is_output(bool o)
 {
     output = o;
@@ -63,24 +93,44 @@ void Port::set_is_output(bool o)
     }
 }
 
+/*!
+ *
+ * @return radius of graphical object of port
+ */
 int Port::radius()
 {
     return my_radius;
 }
 
+/*!
+ *
+ * @return information if port has some special type
+ */
 bool Port::get_typed(){
     return typed;
 }
 
+/*!
+ *
+ * @return block where is port attached
+ */
 Block* Port::get_block(){
     return my_block;
 }
 
+/*!
+ *
+ * @return true if port is output, false if input
+ */
 bool Port::is_output()
 {
     return output;
 }
 
+/*!
+ *
+ * @return vector of all connections attached to port
+ */
 QVector<Connection*>& Port::connections()
 {
     return my_connections;
@@ -108,21 +158,38 @@ void Port::set_flag(int f)
     }
 }
 
+/*!
+ *
+ * @return block where is port attached
+ */
 Block* Port::block() const
 {
     return my_block;
 }
 
+/*!
+ *
+ * @return memory pointer of port
+ */
 quint64 Port::ptr()
 {
     return my_ptr;
 }
 
+/*!
+ * sets pointer to memory of port
+ * @param p pointer
+ */
 void Port::set_ptr(quint64 p)
 {
     my_ptr = p;
 }
 
+/*!
+ * Return information if current port is connected to 'other'.
+ * @param other seccond port
+ * @return true if connected, false otherwise.
+ */
 bool Port::is_connected(Port *other)
 {
     foreach(Connection *conn, my_connections)
@@ -132,6 +199,12 @@ bool Port::is_connected(Port *other)
     return false;
 }
 
+/*!
+ *
+ * @param change
+ * @param value
+ * @return
+ */
 QVariant Port::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     if (change == ItemScenePositionHasChanged)

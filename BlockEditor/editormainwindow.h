@@ -1,3 +1,8 @@
+/*!
+ * @author Petr Knetl
+ * @author Marek Kalabza
+ */
+
 #ifndef EDITORMAINWINDOW_H
 #define EDITORMAINWINDOW_H
 
@@ -9,7 +14,9 @@
 
 
 class Editor;
-
+/*!
+ * This class is root class of application. This class creates new instances of other classes and calls their methods.
+ */
 class EditorMainWindow : public QMainWindow
 {
     Q_OBJECT

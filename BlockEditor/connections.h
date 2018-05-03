@@ -1,10 +1,17 @@
+/*!
+ * @author Petr Knetl
+ * @author Marek Kalabza
+ */
+
 #ifndef CONNECTIONS_H
 #define CONNECTIONS_H
 
 #include <QGraphicsPathItem>
 
 class Port;
-
+/*!
+ * This class contains information about graphical connection and backend attributes of it.
+ */
 class Connection : public QGraphicsPathItem
 {
 public:

@@ -1,3 +1,8 @@
+/*!
+ * @author Petr Knetl
+ * @author Marek Kalabza
+ */
+
 #ifndef PORT_H
 #define PORT_H
 
@@ -5,6 +10,9 @@
 
 class Connection;
 class Block;
+/*!
+ * This class contains information about graphical port and his backend attributes.
+ */
 class Port : public QGraphicsPathItem
 {
 public:

@@ -1,3 +1,12 @@
+/*!
+ * School project for subject (The C++ Programming Language).
+ * This application is graphical editor of mathematical schemes.
+ * For more information chech readme.txt
+ *
+ * @author Petr Knetl
+ * @author Marek Kalabza
+ */
+
 #include "editormainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -20,7 +29,10 @@
 #include <algorithm>
 
 using namespace std;
-
+/*!
+ * Constructor of new window of application. User menu is created and all events are connected to it.
+ * @param parent superior graphical element of application
+ */
 EditorMainWindow::EditorMainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
@@ -139,11 +151,18 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) :
 
 }
 
+
+/*!
+ * Destructor of window
+ */
 EditorMainWindow::~EditorMainWindow()
 {
 
 }
 
+/*!
+ * This method is called on user request of saving scheme to file.
+ */
 void EditorMainWindow::save_schema()
 {
     QString filename = QFileDialog::getSaveFileName();
@@ -159,6 +178,9 @@ void EditorMainWindow::save_schema()
     editor->save(DS);
 }
 
+/*!
+ * This method is called on user request of load scheme from file.
+ */
 void EditorMainWindow::load_schema()
 {
     QString fname = QFileDialog::getOpenFileName();
@@ -180,6 +202,9 @@ void EditorMainWindow::load_schema()
 
 }
 
+/*!
+ * Adds new graphical block with operator + to scene.
+ */
 void EditorMainWindow::add_block_add()
 {
     Block *b = new Block(0);
@@ -196,6 +221,9 @@ void EditorMainWindow::add_block_add()
     this->vector_block.push_back(b);
 }
 
+/*!
+ * Adds new graphical block with operator - to scene.
+ */
 void EditorMainWindow::add_block_sub()
 {
     Block *b = new Block(0);
@@ -212,6 +240,9 @@ void EditorMainWindow::add_block_sub()
     this->vector_block.push_back(b);
 }
 
+/*!
+ * Adds new graphical block with operator * to scene.
+ */
 void EditorMainWindow::add_block_mul()
 {
     Block *b = new Block(0);
@@ -228,6 +259,9 @@ void EditorMainWindow::add_block_mul()
     this->vector_block.push_back(b);
 }
 
+/*!
+ * Adds new graphical block with operator / to scene.
+ */
 void EditorMainWindow::add_block_div()
 {
     Block *b = new Block(0);
@@ -244,6 +278,9 @@ void EditorMainWindow::add_block_div()
     this->vector_block.push_back(b);
 }
 
+/*!
+ * Adds new graphical input block to scene. InputDialog is shown to user and input number is saved to block value.
+ */
 void EditorMainWindow::add_block_input()
 {
     float input_val;
@@ -264,6 +301,9 @@ void EditorMainWindow::add_block_input()
     this->vector_block.push_back(b);
 }
 
+/*!
+ * Adds new graphical output block to scene.
+ */
 void EditorMainWindow::add_block_output()
 {
     Block *b = new Block(0);
@@ -278,6 +318,9 @@ void EditorMainWindow::add_block_output()
     this->vector_block.push_back(b);
 }
 
+/*!
+ * Adds new graphical block with operator ^ to scene.
+ */
 void EditorMainWindow::add_block_pow()
 {
     Block *b = new Block(0);
@@ -294,6 +337,9 @@ void EditorMainWindow::add_block_pow()
     this->vector_block.push_back(b);
 }
 
+/*!
+ * If scheme is in correct state, first uncalculated block of scheme is calculated. Then is calculation stopped.
+ */
 void EditorMainWindow::debug_app(){
     // Znovu nacteni bloku na scene
     this->vector_block.clear();
@@ -345,7 +391,9 @@ void EditorMainWindow::debug_app(){
 
     }
 }
-
+/*!
+ * If scheme is in correct state, All uncalculated blocks of scheme are calculated.
+ */
 void EditorMainWindow::run_app(){
     // Znovu nacteni bloku na scene
     this->vector_block.clear();
@@ -420,6 +468,9 @@ void EditorMainWindow::run_app(){
      }
 }
 
+/*!
+ * Values of all blocks of scheme are reseted to uncalculated, so user can make caluculation again.
+ */
 void EditorMainWindow::reset_app(){
     // Znovu nacteni bloku na scene
     this->vector_block.clear();
@@ -469,6 +520,9 @@ void EditorMainWindow::reset_app(){
     }
 }
 
+/*!
+ * Freeze calculation of scheme for specific amount of time.
+ */
 void EditorMainWindow::delay(){
     QTime dieTime= QTime::currentTime().addSecs(2);
     while (QTime::currentTime() < dieTime)
@@ -489,6 +543,13 @@ void EditorMainWindow::new_schema(){
 
 }
 
+/*!
+ * Control validity of scheme.
+ * If there are unattached inputs, unattached outputs or scheme contains cycles, scheme is not valid.
+ *
+ * @return true if scheme is correct
+ * @return false otherwise
+ */
 bool EditorMainWindow::validate_scheme(){
     foreach(Block *current, vector_block){
 
@@ -532,6 +593,13 @@ bool EditorMainWindow::validate_scheme(){
     return true;
 }
 
+/*!
+ * Recursive function which go through whole tree of connected blocks and detects cycles.
+ * @param current block which is currently controlled
+ * @param in_path vector of all ready controlled blocks
+ * @return true if scheme is without cycles
+ * @return false otherwise
+ */
 bool EditorMainWindow::check_cycles(Block* current, std::vector<Block*> in_path){
      QVector<Port*> current_ports = current->ports();
      foreach(Port *thisport, current_ports){ // pro kazdy port bloku

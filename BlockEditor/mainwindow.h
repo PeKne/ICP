@@ -1,3 +1,8 @@
+/*!
+ * @author Petr Knetl
+ * @author Marek Kalabza
+ */
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
