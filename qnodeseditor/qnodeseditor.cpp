@@ -209,10 +209,14 @@ void QNodesEditor::load(QDataStream &ds)
 			block->load(ds, portMap);
 
 		} else if (type == QNEConnection::Type)
-		{
+        {
             QNEConnection *conn = new QNEConnection(0);
             scene->addItem(conn);
 			conn->load(ds, portMap);
+
+            if (conn->m_port1->m_block->def == true){ //if previous value defined, set tooltip over connection
+                conn->setToolTip(QString::number(conn->m_port1->m_block->value,'f',3));
+            }
 		}
 	}
 }
