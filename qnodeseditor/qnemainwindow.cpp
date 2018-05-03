@@ -154,6 +154,13 @@ QNEMainWindow::QNEMainWindow(QWidget *parent) :
     nodesEditor = new QNodesEditor(this);
     nodesEditor->install(scene);
 
+    // Priprava 5 bloku
+    add_block_add();
+    add_block_div();
+    add_block_sub();
+    add_block_pow();
+    add_block_mul();
+
 }
 
 QNEMainWindow::~QNEMainWindow()

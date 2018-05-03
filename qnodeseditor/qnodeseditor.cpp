@@ -1,37 +1,12 @@
-/* Copyright (c) 2012, STANISLAW ADASZEWSKI
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
-    * Redistributions in binary form must reproduce the above copyright
-      notice, this list of conditions and the following disclaimer in the
-      documentation and/or other materials provided with the distribution.
-    * Neither the name of STANISLAW ADASZEWSKI nor the
-      names of its contributors may be used to endorse or promote products
-      derived from this software without specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL STANISLAW ADASZEWSKI BE LIABLE FOR ANY
-DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. */
-
-#include "qnodeseditor.h"
-
-#include <QGraphicsScene>
 #include <QEvent>
+#include <QGraphicsScene>
 #include <QGraphicsSceneMouseEvent>
 
+#include "qnodeseditor.h"
+#include "qneblock.h"
 #include "qneport.h"
 #include "qneconnection.h"
-#include "qneblock.h"
+
 
 QNodesEditor::QNodesEditor(QObject *parent) :
     QObject(parent)
@@ -80,12 +55,7 @@ bool QNodesEditor::eventFilter(QObject *o, QEvent *e)
 				conn->updatePath();
 
 				return true;
-			} else if (item && item->type() == QNEBlock::Type)
-			{
-                /* if (selBlock)
-                    selBlock->setSelected(); */
-                // selBlock = (QNEBlock*) item;
-			}
+            }
 			break;
 		}
 		case Qt::RightButton:
@@ -118,8 +88,6 @@ bool QNodesEditor::eventFilter(QObject *o, QEvent *e)
                 delete item;
 
             }
-            // if (selBlock == (QNEBlock*) item)
-                // selBlock = 0;
 			break;
 		}
 		}
@@ -144,18 +112,27 @@ bool QNodesEditor::eventFilter(QObject *o, QEvent *e)
 				QNEPort *port1 = conn->port1();
 				QNEPort *port2 = (QNEPort*) item;
 
-                bool port2Empty = true;
+                bool portEmpty = true;
 
+                // Kontrola zda propojujici input porty jsou prazdne
                 foreach(QGraphicsItem *item, scene->items())
                 {
                     if(item->type() != QNEPort::Type)
                         continue;
 
                     QNEPort* port = (QNEPort*) item;
-                    if(port2->isConnected(port))
-                        port2Empty = false;
+                    if(!port2->isOutput())
+                    {
+                        if(port2->isConnected(port))
+                            portEmpty = false;
+                    }else{
+                        if(port1->isConnected(port))
+                            portEmpty = false;
+                    }
                 }
-                if (port2Empty && port1->block() != port2->block() && port1->isOutput() != port2->isOutput() && !port1->isConnected(port2))
+
+                // Zaktulizovani propoju
+                if (portEmpty && port1->block() != port2->block() && port1->isOutput() != port2->isOutput() && !port1->isConnected(port2))
                 {
 					conn->setPos2(port2->scenePos());
                     conn->setPort2(port2);
