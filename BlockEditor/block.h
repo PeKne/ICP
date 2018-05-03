@@ -45,14 +45,14 @@ public:
 
     void save(QDataStream&);
     void load(QDataStream&, QMap<quint64, Port*> &port_map);
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+    void paint(QPainter *painter);
 
     void calculate();
     void fetch_inputs();
 
 
 protected:
-    QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    QVariant itemChange(const QVariant &value);
 
 private:
     float value;

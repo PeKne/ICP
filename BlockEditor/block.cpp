@@ -248,10 +248,10 @@ void Block::load(QDataStream &DS, QMap<quint64, Port*> &port_map)
  * @param painter painter of block
  *
  */
-void Block::paint(QPainter *painter/*/TODO: smazat!!!, const QStyleOptionGraphicsItem *option, QWidget *widget*/)
+void Block::paint(QPainter *painter)
 {
 //    Q_UNUSED(option)
-//    Q_UNUSED(widget)
+
 
     // Barevna zmena bloku
     if (isSelected()) {
@@ -280,9 +280,9 @@ QVector<Port*> Block::ports()
  * @param value
  * @return
  */
-QVariant Block::itemChange(/*GraphicsItemChange change,*/ const QVariant &value)
+QVariant Block::itemChange( const QVariant &value)
 {
-    //Q_UNUSED(change);
+
     return value;
 }
 /*!
