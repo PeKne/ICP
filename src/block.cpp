@@ -248,10 +248,11 @@ void Block::load(QDataStream &DS, QMap<quint64, Port*> &port_map)
  * @param painter painter of block
  *
  */
-void Block::paint(QPainter *painter)
+void Block::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-//    Q_UNUSED(option)
+    Q_UNUSED(option)
 
+    Q_UNUSED(widget)
 
     // Barevna zmena bloku
     if (isSelected()) {
@@ -275,16 +276,6 @@ QVector<Port*> Block::ports()
     return vector;
 }
 
-/*!
- * /TODO: co to je?
- * @param value
- * @return
- */
-QVariant Block::itemChange( const QVariant &value)
-{
-
-    return value;
-}
 /*!
  * Gets values of all blocks connected into input ports of this block.
  * If input blocks are not defined, value of current block is set to undefined too.
