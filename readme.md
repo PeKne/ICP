@@ -58,7 +58,7 @@ Top bar is divided into three menus:
 ### Mouse Control
 
 Moving with blocks is possible as Drag-and-drop action. New link is created
- after Drag-and-drop from one port to another one. Right click on Block destroys that block.
+ after Drag-and-drop from output port of one block into input port of another block. Right click on Block destroys that block.
 
 ## Examples
 In directory *examples* you can find saved schemes which represents functionality of application.
