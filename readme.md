@@ -10,7 +10,7 @@ That is basic idea how this application works.
 
 Qt version 5 and C++ compiler is required for compiling this application.
 
-## Installing
+## Installation
 
 Run makefile make command from command line.
 
@@ -43,7 +43,7 @@ user@machine:/path/to/project$ ./blockeditor
 
 ### Menubar
 
-Top bar is divided into three menu:
+Top bar is divided into three menus:
 * Scheme
   * New - creates new empty scheme
   * Save - save current scheme into file
@@ -63,14 +63,6 @@ Moving with blocks is possible as Drag-and-drop action. New link is created
 ```
 Give an example
 ```
-
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
 
 ## Authors
 
