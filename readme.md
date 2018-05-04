@@ -33,10 +33,10 @@ user@machine:/path/to/project$ make clean
 ```
 
 ## Running the application
-Open binary file blockeditor in root file of project after 'make'.
+Open binary file blockeditor in root file of project with 'make run' command.
 
 ```
-user@machine:/path/to/project$ ./blockeditor
+user@machine:/path/to/project$ make run
 ```
 
 ## Controls of GUI application
