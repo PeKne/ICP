@@ -12,44 +12,58 @@ Qt version 5 and C++ compiler is required for compiling this application.
 
 ## Installing
 
-A step by step series of examples that tell you have to get a development env running
-
-Say what the step will be
+Run makefile make command from command line.
 
 ```
-Give the example
+user@machine:/path/to/project$ make
 ```
 
-And repeat
-
+For generating of Doxygen documentation run 'make doc'.
 ```
-until finished
+user@machine:/path/to/project$ make doc
 ```
 
-End with an example of getting some data out of the system or using it for a little demo
+For creating zip archive of project run 'make zip'.
+```
+user@machine:/path/to/project$ make zip
+```
+For remove of all built files run 'make clean'.
+```
+user@machine:/path/to/project$ make clean
+```
 
 ## Running the application
 Open binary file blockeditor in root file of project.
 
 ```
-./blockeditor
+user@machine:/path/to/project$ ./blockeditor
 ```
 
-### Break down into end to end tests
+## Controls of GUI application
 
-Explain what these tests test and why
+### Menubar
+
+Top bar is divided into three menu:
+* Scheme
+  * New - creates new empty scheme
+  * Save - save current scheme into file
+  * Load - load existing scheme from file
+
+* Block - add different kinds of block into scheme
+* Action
+  * Debug - calculate on uncalculated block of scheme
+  * Run - calculate every block of scheme
+  * Stop - remove values from all ready calculated blocks
+
+### Mouse Control
+
+Moving with blocks is possible as Drag-and-drop action. New link is created
+ after Drag-and-drop from one port to another one. Right click on Block destroys that block.
 
 ```
 Give an example
 ```
 
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
 
 ## Built With
 
