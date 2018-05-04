@@ -66,5 +66,5 @@ Every file in that directory is one saved scheme and represents different functi
 
 ## Authors
 
-* **Marek Kalabza** - *xkalab00*
+* **Marek Kalabza** - *xkalab09*
 * **Petr Knetl** - *xknetl00*
