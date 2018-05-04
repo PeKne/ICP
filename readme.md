@@ -10,9 +10,9 @@ That is basic idea how this application works.
 
 Qt version 5 and C++ compiler is required for compiling this application.
 
-## Installation
+## Makefile
 
-Run makefile make command from command line.
+For compile of application run makefile make command from command line.
 
 ```
 user@machine:/path/to/project$ make
@@ -33,7 +33,7 @@ user@machine:/path/to/project$ make clean
 ```
 
 ## Running the application
-Open binary file blockeditor in root file of project.
+Open binary file blockeditor in root file of project after 'make'.
 
 ```
 user@machine:/path/to/project$ ./blockeditor
@@ -59,10 +59,6 @@ Top bar is divided into three menus:
 
 Moving with blocks is possible as Drag-and-drop action. New link is created
  after Drag-and-drop from one port to another one. Right click on Block destroys that block.
-
-```
-Give an example
-```
 
 ## Authors
 
