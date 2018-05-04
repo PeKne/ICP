@@ -140,15 +140,6 @@ EditorMainWindow::EditorMainWindow(QWidget *parent) :
     editor = new Editor(this);
     editor->install(scene);
 
-
-    // Priprava 5 bloku pro ukazku
-
-    add_block_add();
-    add_block_div();
-    add_block_sub();
-    add_block_pow();
-    add_block_mul();
-
 }
 
 

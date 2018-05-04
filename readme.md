@@ -8,7 +8,7 @@ That is basic idea how this application works.
 
 ### Prerequisites
 
-Qt version 5 and C++ compiler is required for compiling this application.
+Qt version 5.5 and C++ compiler is required for compiling this application.
 
 ## Makefile
 
@@ -20,7 +20,7 @@ user@machine:/path/to/project$ make
 
 For generating of Doxygen documentation run 'make doc'.
 ```
-user@machine:/path/to/project$ make doc
+user@machine:/path/to/project$ make doxygen
 ```
 
 For creating zip archive of project run 'make zip'.
@@ -59,6 +59,10 @@ Top bar is divided into three menus:
 
 Moving with blocks is possible as Drag-and-drop action. New link is created
  after Drag-and-drop from one port to another one. Right click on Block destroys that block.
+
+## Examples
+In directory *examples* you can find saved schemes which represents functionality of application.
+Every file in that directory is one saved scheme and represents different functionality.
 
 ## Authors
 
